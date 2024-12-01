@@ -8,20 +8,20 @@
 
 // struct para armazenar coordenadas
 typedef struct coordenada {
-    float x;
-    float y;
+    int x;
+    int y;
     char *point; // Ponteiro para string, alocação dinâmica
-    float distanceToOrigin;
+    double distanceToOrigin;
 } Coordenada;
 
 // Função para calcular a distância euclidiana entre dois pontos
-float euclidianDistance(const Coordenada coord1, const Coordenada coord2) {
+double euclidianDistance(const Coordenada coord1, const Coordenada coord2) {
     return sqrt(pow(coord1.x - coord2.x, 2) + pow(coord1.y - coord2.y, 2));
 }
 
 // Função para calcular a distância euclidiana total
-float totalEuclidianDistance(const Coordenada coord[], int quantCoordenadas) {
-    float totalDistance = 0.0;
+double totalEuclidianDistance(const Coordenada coord[], int quantCoordenadas) {
+    double totalDistance = 0.0;
     for (int i = 0; i < quantCoordenadas - 1; i++) {
         totalDistance += euclidianDistance(coord[i], coord[i + 1]);
     }
@@ -66,7 +66,7 @@ void mergeCoords(Coordenada coord[], int inicio, int meio, int fim) {
 // Função para ordenar, através do merge sort, o array de coordenadas com relação à distância à origem
 void mergeSortCoords(Coordenada coord[], int inicio, int fim) {
     if (inicio < fim) {
-        int meio = (inicio + fim) / 2;
+        int meio = inicio + (fim - inicio) / 2; //Prevenindo overflow
         mergeSortCoords(coord, inicio, meio);
         mergeSortCoords(coord, meio + 1, fim);
         mergeCoords(coord, inicio, meio, fim);
@@ -76,9 +76,11 @@ void mergeSortCoords(Coordenada coord[], int inicio, int fim) {
 // Função para converter o array de coordenadas em string (com alocação dinâmica)
 char* coordPointsToString(const Coordenada coord[], int quantCoordenadas) {
     char *str = (char*)malloc(MAX_CARACTERES_LINHA * sizeof(char)); // Alocação dinâmica!
+
     str[0] = '\0'; // Inicializa a string
     for (int i = 0; i < quantCoordenadas; i++) {
         char *temp = (char*)malloc((strlen(coord[i].point) + 1) * sizeof(char));
+
         strcpy(temp, coord[i].point);
         strcat(str, temp);
         free(temp); // Libera memória do buffer temporário
@@ -86,12 +88,13 @@ char* coordPointsToString(const Coordenada coord[], int quantCoordenadas) {
     return str;
 }
 
+
 int main() {
-    FILE *fp_in = fopen("lists.txt", "r");
-    FILE *fp_out = fopen("saida.txt", "w");
+    FILE *fp_in = fopen("L0Q1.in", "r"); // Abre L0Q1.in para leitura
+    FILE *fp_out = fopen("L0Q1.out", "w"); // Abre L0Q1.out para escrita
 
     if (fp_in == NULL || fp_out == NULL) {
-        printf("Erro ao abrir arquivos");
+        printf("Error opening files");
         return EXIT_FAILURE;
     }
 
@@ -115,23 +118,23 @@ int main() {
             char *x_str = strtok(NULL, delimitatorCoordinatesX);
             char *y_str = strtok(NULL, delimitatorCoordinatesY);
 
-            coord[contCoords].x = atof(x_str);
+            coord[contCoords].x = (int)strtol(x_str, &endptr, 10);
 
-            coord[contCoords].y = atof(y_str);
+            coord[contCoords].y = (int)strtol(y_str, &endptr, 10);
 
             coord[contCoords].distanceToOrigin = sqrt(pow(coord[contCoords].x, 2) + pow(coord[contCoords].y, 2));
             contCoords++;
             slice = strtok(NULL, delimitatorPoint);
         }
 
-        float totalDistance = (contCoords >= 2) ? totalEuclidianDistance(coord, contCoords) : 0.0;
-        float shortcut = (contCoords >= 2) ? euclidianDistance(coord[0], coord[contCoords - 1]) : 0.0;
+        double totalDistance = (contCoords >= 2) ? totalEuclidianDistance(coord, contCoords) : 0.0;
+        double shortcut = (contCoords >= 2) ? euclidianDistance(coord[0], coord[contCoords - 1]) : 0.0;
 
         mergeSortCoords(coord, 0, contCoords - 1);
         stringCoords = coordPointsToString(coord, contCoords);
 
         char text[MAX_CARACTERES_LINHA]; // aumenta o tamanho
-        sprintf(text, "points %s distance %.2f shortcut %.2f\n", stringCoords, totalDistance, shortcut);
+        sprintf(text, "points %s distance %.2lf shortcut %.2lf\n", stringCoords, totalDistance, shortcut);
         fputs(text, fp_out);
 
         // Libera memória alocada para as strings que armazenam point
