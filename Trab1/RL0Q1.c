@@ -1,132 +1,147 @@
-#include <stdio.h> // Inclui a biblioteca padrão de entrada e saída
-#include <stdlib.h> // Inclui a biblioteca padrão com funções gerais, incluindo atoi e EXIT_FAILURE/SUCCESS
-#include <string.h> // Inclui a biblioteca de manipulação de strings (para strtok, embora não diretamente usada neste código).
-#include <math.h> // Inclui a biblioteca math.h para funções matemáticas, incluindo sqrt e pow
-#define MaxCaractersLinha 500
-#define MaxCoordenadas 200
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#define MAX_CARACTERES_LINHA 500
+#define MAX_COORDENADAS 100
 
 // struct para armazenar coordenadas
 typedef struct coordenada {
     float x;
     float y;
-    char point[50];
+    char *point; // Ponteiro para string, alocação dinâmica
     float distanceToOrigin;
-}coordenada;
+} Coordenada;
 
-// Função para remover um caractere específico de uma string
-void removeCaractere(char str[],char charToRemove) {
-    char temp[strlen(str)];
-    int cont=0;
-    for ( int i = 0; i < strlen(str); i++) {
-        if (str[i] != charToRemove) {
-            temp[i] = str[i];
-            cont++;
-        }
-    }
-    temp[cont] = '\0';
-    strcpy(str, temp);
-}
-
-// Função para calcular a menor distância euclidiana entre dois pontos
-float euclidianDistance(coordenada coord, coordenada coord2) {
-    float distance = 0.0;
-    distance = sqrt(pow(coord.x - coord2.x, 2) + pow(coord.y - coord2.y, 2));
-    return distance;
+// Função para calcular a distância euclidiana entre dois pontos
+float euclidianDistance(const Coordenada coord1, const Coordenada coord2) {
+    return sqrt(pow(coord1.x - coord2.x, 2) + pow(coord1.y - coord2.y, 2));
 }
 
 // Função para calcular a distância euclidiana total
-float totalEuclidianDistance(coordenada coord[], int quantCoordenadas) {
-    float distance = 0.0;
-    for( int i = 0; i < quantCoordenadas-1; i++) {
-        euclidianDistance(coord[i+1], coord[i]);
+float totalEuclidianDistance(const Coordenada coord[], int quantCoordenadas) {
+    float totalDistance = 0.0;
+    for (int i = 0; i < quantCoordenadas - 1; i++) {
+        totalDistance += euclidianDistance(coord[i], coord[i + 1]);
     }
-    return distance;
+    return totalDistance;
 }
 
-//Função para ordenar o array de coordenadas com relação à distância à origem
-void ordenarCoordenadas(coordenada coord[], int quantCoordenadas) {
+// Função auxiliar merge para o merge sort
+void mergeCoords(Coordenada coord[], int inicio, int meio, int fim) {
+    int n1 = meio - inicio + 1;
+    int n2 = fim - meio;
 
+    Coordenada *esq = (Coordenada *)malloc(n1 * sizeof(Coordenada));
+    Coordenada *dir = (Coordenada *)malloc(n2 * sizeof(Coordenada));
+
+    for (int i = 0; i < n1; i++) {
+        esq[i] = coord[inicio + i];
+    }
+    for (int i = 0; i < n2; i++) {
+        dir[i] = coord[meio + 1 + i];
+    }
+
+    int i = 0, j = 0, k = inicio;
+    while (i < n1 && j < n2) {
+        if (esq[i].distanceToOrigin <= dir[j].distanceToOrigin) {
+            coord[k++] = esq[i++];
+        } else {
+            coord[k++] = dir[j++];
+        }
+    }
+
+    while (i < n1) {
+        coord[k++] = esq[i++];
+    }
+    while (j < n2) {
+        coord[k++] = dir[j++];
+    }
+
+    free(esq);
+    free(dir);
 }
 
-//Função para converter o array de coordenadas em string
-void coordPointsToString(coordenada coord[], int quantCoordenadas, char str[]) {
+// Função para ordenar, através do merge sort, o array de coordenadas com relação à distância à origem
+void mergeSortCoords(Coordenada coord[], int inicio, int fim) {
+    if (inicio < fim) {
+        int meio = (inicio + fim) / 2;
+        mergeSortCoords(coord, inicio, meio);
+        mergeSortCoords(coord, meio + 1, fim);
+        mergeCoords(coord, inicio, meio, fim);
+    }
+}
+
+// Função para converter o array de coordenadas em string (com alocação dinâmica)
+char* coordPointsToString(const Coordenada coord[], int quantCoordenadas) {
+    char *str = (char*)malloc(MAX_CARACTERES_LINHA * sizeof(char)); // Alocação dinâmica!
+    str[0] = '\0'; // Inicializa a string
     for (int i = 0; i < quantCoordenadas; i++) {
-        strcat(str, coord[i].point); // concatena os valores da struct coordenada em uma string    
+        char *temp = (char*)malloc((strlen(coord[i].point) + 1) * sizeof(char));
+        strcpy(temp, coord[i].point);
+        strcat(str, temp);
+        free(temp); // Libera memória do buffer temporário
     }
+    return str;
 }
-
 
 int main() {
-    // Ponteiros para os arquivos de entrada e saída
-    FILE *fp_in = fopen("lists.txt", "r"); // Abre lists.txt para leitura ("r")
-    FILE *fp_out = fopen("saida.txt", "w"); // Abre saida.txt para escrita ("w"), sobrescrevendo se existir
+    FILE *fp_in = fopen("lists.txt", "r");
+    FILE *fp_out = fopen("saida.txt", "w");
 
-    // Verifica se os arquivos foram abertos com sucesso
     if (fp_in == NULL || fp_out == NULL) {
-        printf("Arquivos não podem ser abertos.\n"); // Mensagem de erro para o usuário
-        return EXIT_FAILURE; // Retorna um código de erro indicando falha
+        printf("Erro ao abrir arquivos");
+        return EXIT_FAILURE;
     }
 
-    char line[MaxCaractersLinha]; // Buffer para armazenar cada linha lida do arquivo
-    coordenada coord[MaxCoordenadas]; // Buffer para armazenar cada coordenada lida do arquivo
-    const char delimitatorPoint[] = " "; // Delimitador para separar os pontos
-    const char delimitatorCoordinatesX[] = ","; // Delimitador para separar as coordenadas (x)
-    const char delimitatorCoordinatesY[] = ")"; // Delimitador para separar as coordenadas (y)
-    char *slice; // Ponteiro para apontar para cada ponto separado na linha
-    char *slice2; // Ponteiro para apontar para cada número separado na linha
+    char line[MAX_CARACTERES_LINHA];
+    Coordenada coord[MAX_COORDENADAS];
+    const char delimitatorPoint[] = " ";
+    const char delimitatorCoordinatesX[] = ","; // delimitador para X
+    const char delimitatorCoordinatesY[] = ")"; // delimitador para Y
+    char *slice;
+    char *endptr; // auxiliar para atof
+    int contCoords = 0;
+    char *stringCoords;
 
-    // Loop para ler cada linha do arquivo de entrada
-    while (fgets(line, MaxCaractersLinha, fp_in) != NULL) { // fgets lê uma linha do arquivo até 500 caracteres ou \n
-        // strtok: (1) não é thread-safe (2) modifica a string original
-        slice = strtok(line, delimitatorPoint); // Separa a primeira parte da linha usando o espaço como delimitador
-        int contCoords=0; // Contador para armazenar o número de pontos na linha
-        char text[MaxCaractersLinha]; // Buffer para armazenar a saída formatada como string
-        char stringCoords[MaxCaractersLinha]; // Buffer para armazenar a array de coordenadas formatada como string
+    while (fgets(line, MAX_CARACTERES_LINHA, fp_in) != NULL) {
+        slice = strtok(line, delimitatorPoint);
+        contCoords = 0;
 
-        // Loop para processar cada ponto na linha
-        while (slice != NULL) {
-            coord[contCoords].point = slice;
-            
-            slice2 = strtok(slice, delimitatorCoordinatesX); // Separa o primeiro valor do ponto usando a vírgula como delimitador
-            removeCaractere(slice2, '('); // Remove o caractere "( para que seja feita a conversão para float" 
-            coord[contCoords].x = atof(slice2); // Converte a string (número) para float e armazena o valor de x
+        while (slice != NULL && contCoords < MAX_COORDENADAS) {
+            coord[contCoords].point = strdup(slice); // alocação dinâmica e copia da string
 
-            slice2 = strtok(NULL, delimitatorCoordinatesY); // Separa o segundo valor do ponto usando o ")" como delimitador
-            coord[contCoords].y = atof(slice2); // Converte a string (número) para float e armazena o valor de y
+            char *x_str = strtok(NULL, delimitatorCoordinatesX);
+            char *y_str = strtok(NULL, delimitatorCoordinatesY);
 
-            coord[contCoords].distanceToOrigin = sqrt(pow(coord[contCoords].x, 2) + pow(coord[contCoords].y, 2)); // Calcula a distância daquele ponto para ao ponto (0,0)
+            coord[contCoords].x = atof(x_str);
+
+            coord[contCoords].y = atof(y_str);
+
+            coord[contCoords].distanceToOrigin = sqrt(pow(coord[contCoords].x, 2) + pow(coord[contCoords].y, 2));
             contCoords++;
-
-            slice = strtok(NULL, delimitatorPoint); // Obtém o próximo ponto separado pelo espaço
+            slice = strtok(NULL, delimitatorPoint);
         }
 
-        //calcular a distância total euclidiana
-        float distance = 0.0;
-        if(contCoords >= 2){ //calcula apenas caso hajam ao menos dois pontos listados na linha
-            distance = totalEuclidianDistance(coord, contCoords);
+        float totalDistance = (contCoords >= 2) ? totalEuclidianDistance(coord, contCoords) : 0.0;
+        float shortcut = (contCoords >= 2) ? euclidianDistance(coord[0], coord[contCoords - 1]) : 0.0;
+
+        mergeSortCoords(coord, 0, contCoords - 1);
+        stringCoords = coordPointsToString(coord, contCoords);
+
+        char text[MAX_CARACTERES_LINHA]; // aumenta o tamanho
+        sprintf(text, "points %s distance %.2f shortcut %.2f\n", stringCoords, totalDistance, shortcut);
+        fputs(text, fp_out);
+
+        // Libera memória alocada para as strings que armazenam point
+        for (int i = 0; i < contCoords; i++) {
+            free(coord[i].point);
         }
-
-        //calcular a menor distância entre o primeiro e o ultimo ponto da entrada
-        float shortcut = 0.0;
-        if(contCoords >= 2){ //calcula apenas caso hajam ao menos dois pontos listados na linha
-            shortcut= euclidianDistance(coord[contCoords-1], coord[0]);
-        }
-
-        //ordenar array de coordenadas pela distância até a origem (coord.distanceToOrigin)
-        ordenarCoordenadas(coord, contCoords);
-
-        //converter o array de coordenadas em uma string
-        char stringCoords[MaxCaractersLinha];
-        coordPointsToString(coord, contCoords, stringCoords);
-
-        //formatação da linha de saída
-        sprintf(text, "points %s distance %.2f shortcut %.2f\n",stringCoords,distance,shortcut) ; // Formata a saída como string, adicionando uma nova linha
- 
-
-        fputs(text, fp_out); // Escreve a soma formatada no arquivo de saída
+        free(stringCoords);
     }
 
-    fclose(fp_in); // Fecha o arquivo de entrada
-    fclose(fp_out); // Fecha o arquivo de saída
-    return EXIT_SUCCESS; // Retorna um código de sucesso
+    fclose(fp_in);
+    fclose(fp_out);
+    return EXIT_SUCCESS;
 }
