@@ -1,6 +1,6 @@
 #include <stdio.h> // Inclui a biblioteca padrão de entrada e saída
-#include <stdlib.h> // Inclui a biblioteca padrão com funções gerais, incluindo atoi e EXIT_FAILURE/SUCCESS
-#include <string.h> // Inclui a biblioteca de manipulação de strings (para strtok, embora não diretamente usada neste código).
+#include <stdlib.h> // Inclui a biblioteca padrão com funções gerais, incluindo atof
+#include <string.h> // Inclui a biblioteca de manipulação de strings
 #include <math.h> // Inclui a biblioteca math.h para funções matemáticas, incluindo sqrt e pow
 #define MaxCaractersLinha 1000
 
@@ -32,7 +32,8 @@ float totalEuclidianDistance(coordenada coord[], int quantCoordenadas) {
 // Função para converter o array de coordenadas em string
 void coordPointsToString(coordenada coord[], int quantCoordenadas, char str[]) {
     for (int i = 0; i < quantCoordenadas; i++) {
-        strcat(str, coord[i].point); // concatena os valores da struct coordenada em uma string    
+        strcat(str, coord[i].point); // concatena os valores da struct coordenada em uma string
+        strcat(str, " "); // concatena um " " após o ponto
     }
 }
 
@@ -54,53 +55,69 @@ int main()
     coordenada coord[100]; // Buffer para armazenar as coordenadas (points)
     const char space[] = " ";
     const char points_separators[] = "(,)";
-    char *outer_context;
-    char *inner_context;
+    //char *outer_context;
+    //char *inner_context;
 
     while (fgets(line, sizeof(line), fp_in) != NULL)
     {
         int contCoords=0; // Contador para armazenar o número de pontos na linha
-        char text[MaxCaractersLinha]; // Buffer para armazenar a saída formatada como string
+        // char text[MaxCaractersLinha]; // Buffer para armazenar a saída formatada como string
         char stringCoords[MaxCaractersLinha]; // Buffer para armazenar a array de coordenadas formatada como string
 
-        char *slice = strtok_r(line, space, &outer_context);
+        char *slice = strtok(line, space);
         while (slice != NULL)
         {
             // armazenar ponto na struct (ponto atual)
             strcpy(coord[contCoords].point,slice);
 
             // armazena o x e o y daquela coordenada
-            coord[contCoords].x = atof(strtok_r(slice, points_separators, &inner_context));
-            coord[contCoords].y = atof(strtok_r(slice, points_separators, &inner_context));
+
+            // com strtok_r
+            // coord[contCoords].x = atof(strtok_r(slice, points_separators, &inner_context));
+            // coord[contCoords].y = atof(strtok_r(NULL, points_separators, &inner_context));
+
+            // com sscanf
+            sscanf(slice, "(%f,%f)", &coord[contCoords].x, &coord[contCoords].y);
+
+            // if (sscanf(slice, "(%f,%f)", &coord[contCoords].x, &coord[contCoords].y) == 2) { // DEBUG
+            //     printf("x = %.2f, y = %.2f\n", coord[contCoords].x, coord[contCoords].y);
+            // } else {
+            //     printf("Erro ao interpretar a string.\n"); // DEBUG
+            // }
 
             // calcula distância para origem
             coord[contCoords].distanceToOrigin = sqrt(pow(coord[contCoords].x, 2) + pow(coord[contCoords].y, 2)); // Calcula a distância daquele ponto para ao ponto (0,0)
+
+            // Aumenta o contador, contabilizando coordenada atual
             contCoords++;
 
-            slice = strtok_r(NULL, space, &outer_context);
+            slice = strtok(NULL, space);
         }
 
 
-        //calcular a distância total euclidiana
+        // calcular a distância total euclidiana
         float distance = 0.0;
         if(contCoords >= 2){ //calcula apenas caso hajam ao menos dois pontos listados na linha
             distance = totalEuclidianDistance(coord, contCoords);
         }
 
-        //calcular a menor distância entre o primeiro e o ultimo ponto da entrada
+        // calcular a menor distância entre o primeiro e o ultimo ponto da entrada
         float shortcut = 0.0;
         if(contCoords >= 2){ //calcula apenas caso hajam ao menos dois pontos listados na linha
             shortcut= euclidianDistance(coord[contCoords-1], coord[0]);
         }
 
-        //ordenar array de coordenadas pela distância até a origem (coord.distanceToOrigin)
+        // ordenar array de coordenadas pela distância até a origem (coord.distanceToOrigin)
         
 
-        //converter o array de coordenadas em uma string
+        // converter o array de coordenadas em uma string
         coordPointsToString(coord, contCoords, stringCoords);
 
-        //formatação da linha de saída
-        sprintf(text, "points %s distance %.2f shortcut %.2f\n",stringCoords,distance,shortcut) ; // Formata a saída como string, adicionando uma nova linha
+        // formatação impressão da linha de saída
+        char text[MaxCaractersLinha];
+        sprintf(text, "points %sdistance %.2f shortcut %.2f\n",stringCoords,distance,shortcut) ; // Formata a saída como string, adicionando uma nova linha
+        fputs(text, fp_out);
+        // fprintf(fp_out, "points %s distance %.2f shortcut %.2f\n",stringCoords,distance,shortcut);
     }
 
     fclose(fp_in);
