@@ -30,10 +30,13 @@ float totalEuclidianDistance(coordenada coord[], int quantCoordenadas) {
 }
 
 // Função para converter o array de coordenadas em string
-void coordPointsToString(coordenada coord[], int quantCoordenadas, char str[]) {
+void coordPointsToString(coordenada coord[], int quantCoordenadas, char str[], size_t str_size) {
+    str[0] = '\0';
     for (int i = 0; i < quantCoordenadas; i++) {
-        strcat(str, coord[i].point); // concatena os valores da struct coordenada em uma string
-        strcat(str, " "); // concatena um " " após o ponto
+        snprintf(str + strlen(str), str_size - strlen(str), "%s ", coord[i].point);
+    }
+    if (strlen(str) > 0) {
+        str[strlen(str) - 1] = '\0'; // Remove o espaço extra final
     }
 }
 
@@ -66,6 +69,7 @@ int main()
         // char text[MaxCaractersLinha]; // Buffer para armazenar a saída formatada como string
 
         char *slice = strtok(line, space);
+
         while (slice != NULL)
         {
             if(slice[0] == '(' && slice[strlen(slice)-1] == ')') {
@@ -108,11 +112,10 @@ int main()
         
 
         // converter o array de coordenadas em uma string
-        coordPointsToString(coord, contCoords, stringCoords);
-
+        coordPointsToString(coord, contCoords, stringCoords, sizeof(stringCoords));
         // formatação impressão da linha de saída
         char text[MaxCaractersLinha];
-        sprintf(text, "points %sdistance %.2f shortcut %.2f\n",stringCoords,distance,shortcut) ; // Formata a saída como string, adicionando uma nova linha
+        sprintf(text, "points %s distance %.2f shortcut %.2f\n",stringCoords,distance,shortcut) ; // Formata a saída como string, adicionando uma nova linha
         fputs(text, fp_out);
         // fprintf(fp_out, "points %s distance %.2f shortcut %.2f\n",stringCoords,distance,shortcut);
     }
