@@ -51,7 +51,7 @@ int main()
     }
 
     char line[MaxCaractersLinha]; // Buffer para armazenar cada linha lida do arquivo
-    coordenada coord[200]; // Buffer para armazenar as coordenadas (points)
+    coordenada coord[100]; // Buffer para armazenar as coordenadas (points)
     const char space[] = " ";
     const char points_separators[] = "(,)";
     char *outer_context;
