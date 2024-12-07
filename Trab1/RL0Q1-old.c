@@ -106,8 +106,8 @@ void coordPointsToString(coordenada coord[], int quantCoordenadas, char str[]) {
 
 int main() {
     // Ponteiros para os arquivos de entrada e saída
-    FILE *fp_in = fopen("lists.txt", "r"); // Abre lists.txt para leitura ("r")
-    FILE *fp_out = fopen("saida.txt", "w"); // Abre saida.txt para escrita ("w"), sobrescrevendo se existir
+    FILE *fp_in = fopen("L0Q1.in", "r"); // Abre o arquivo de leitura ("r")
+    FILE *fp_out = fopen("L0Q1.out", "w"); // Abre o arquivo de escrita ("w")
 
     // Verifica se os arquivos foram abertos com sucesso
     if (fp_in == NULL || fp_out == NULL) {
