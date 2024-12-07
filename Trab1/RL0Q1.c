@@ -40,7 +40,35 @@ void coordPointsToString(coordenada coord[], int quantCoordenadas, char str[], s
     }
 }
 
-// mergeSort para organizar lista de pontos
+// quickSort para organizar lista de pontos
+void swap(coordenada *xp, coordenada *yp) {
+    coordenada temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+int partition(coordenada arr[], int low, int high) {
+    float pivot = arr[high].distanceToOrigin;
+    int i = (low - 1);
+
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j].distanceToOrigin < pivot) {
+            i++;
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
+}
+
+void quickSort(coordenada arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
 
 int main()
 {
@@ -54,30 +82,25 @@ int main()
         return EXIT_FAILURE;
     }
 
-    coordenada coord[100]; // Buffer para armazenar as coordenadas (points)
+    coordenada coord[1000]; // Buffer para armazenar as coordenadas (points)
     char line[MaxCaractersLinha]; // Buffer para armazenar cada linha lida do arquivo
     char stringCoords[MaxCaractersLinha]; // Buffer para armazenar a array de coordenadas formatada como string
 
     const char space[] = " ";
     const char points_separators[] = "(,)";
-    //char *outer_context;
-    //char *inner_context;
 
     while (fgets(line, sizeof(line), fp_in) != NULL)
     {
         int contCoords=0; // Contador para armazenar o número de pontos na linha
-        // char text[MaxCaractersLinha]; // Buffer para armazenar a saída formatada como string
-
         char *slice = strtok(line, space);
 
         while (slice != NULL)
         {
             if(slice[0] == '(' && slice[strlen(slice)-1] == ')') {
                 // armazenar ponto na struct (ponto atual)
-                strcpy(coord[contCoords].point,slice); //
+                strcpy(coord[contCoords].point,slice);
 
                 // armazena o x e o y daquela coordenada
-
                 sscanf(slice, "(%f,%f)", &coord[contCoords].x, &coord[contCoords].y);
 
                 // if (sscanf(slice, "(%f,%f)", &coord[contCoords].x, &coord[contCoords].y) == 2) { // DEBUG
@@ -109,15 +132,15 @@ int main()
         }
 
         // ordenar array de coordenadas pela distância até a origem (coord.distanceToOrigin)
-        
+        quickSort(coord, 0, contCoords - 1);
 
         // converter o array de coordenadas em uma string
         coordPointsToString(coord, contCoords, stringCoords, sizeof(stringCoords));
+
         // formatação impressão da linha de saída
         char text[MaxCaractersLinha];
         sprintf(text, "points %s distance %.2f shortcut %.2f\n",stringCoords,distance,shortcut) ; // Formata a saída como string, adicionando uma nova linha
         fputs(text, fp_out);
-        // fprintf(fp_out, "points %s distance %.2f shortcut %.2f\n",stringCoords,distance,shortcut);
     }
 
     fclose(fp_in);
