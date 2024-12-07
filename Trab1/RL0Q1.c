@@ -16,7 +16,7 @@ typedef struct coordenada {
 // Função para calcular a menor distância euclidiana entre dois pontos
 float euclidianDistance(coordenada coord, coordenada coord2) {
     float distance = 0.0;
-    distance = sqrt(pow(coord.x - coord2.x, 2) + pow(coord.y - coord2.y, 2));
+    distance = sqrt(pow(coord2.x - coord.x, 2) + pow(coord2.y - coord.y, 2));
     return distance;
 }
 
@@ -24,7 +24,7 @@ float euclidianDistance(coordenada coord, coordenada coord2) {
 float totalEuclidianDistance(coordenada coord[], int quantCoordenadas) {
     float distance = 0.0;
     for( int i = 0; i < quantCoordenadas-1; i++) {
-        euclidianDistance(coord[i+1], coord[i]);
+        distance += euclidianDistance(coord[i+1], coord[i]);
     }
     return distance;
 }
@@ -51,8 +51,10 @@ int main()
         return EXIT_FAILURE;
     }
 
-    char line[MaxCaractersLinha]; // Buffer para armazenar cada linha lida do arquivo
     coordenada coord[100]; // Buffer para armazenar as coordenadas (points)
+    char line[MaxCaractersLinha]; // Buffer para armazenar cada linha lida do arquivo
+    char stringCoords[MaxCaractersLinha]; // Buffer para armazenar a array de coordenadas formatada como string
+
     const char space[] = " ";
     const char points_separators[] = "(,)";
     //char *outer_context;
@@ -62,35 +64,30 @@ int main()
     {
         int contCoords=0; // Contador para armazenar o número de pontos na linha
         // char text[MaxCaractersLinha]; // Buffer para armazenar a saída formatada como string
-        char stringCoords[MaxCaractersLinha]; // Buffer para armazenar a array de coordenadas formatada como string
 
         char *slice = strtok(line, space);
         while (slice != NULL)
         {
-            // armazenar ponto na struct (ponto atual)
-            strcpy(coord[contCoords].point,slice);
+            if(slice[0] == '(' && slice[strlen(slice)-1] == ')') {
+                // armazenar ponto na struct (ponto atual)
+                strcpy(coord[contCoords].point,slice); //
 
-            // armazena o x e o y daquela coordenada
+                // armazena o x e o y daquela coordenada
 
-            // com strtok_r
-            // coord[contCoords].x = atof(strtok_r(slice, points_separators, &inner_context));
-            // coord[contCoords].y = atof(strtok_r(NULL, points_separators, &inner_context));
+                sscanf(slice, "(%f,%f)", &coord[contCoords].x, &coord[contCoords].y);
 
-            // com sscanf
-            sscanf(slice, "(%f,%f)", &coord[contCoords].x, &coord[contCoords].y);
+                // if (sscanf(slice, "(%f,%f)", &coord[contCoords].x, &coord[contCoords].y) == 2) { // DEBUG
+                //     printf("x = %.2f, y = %.2f\n", coord[contCoords].x, coord[contCoords].y);
+                // } else {
+                //     printf("Erro ao interpretar a string.\n"); // DEBUG
+                // }
 
-            // if (sscanf(slice, "(%f,%f)", &coord[contCoords].x, &coord[contCoords].y) == 2) { // DEBUG
-            //     printf("x = %.2f, y = %.2f\n", coord[contCoords].x, coord[contCoords].y);
-            // } else {
-            //     printf("Erro ao interpretar a string.\n"); // DEBUG
-            // }
+                // calcula distância para origem
+                coord[contCoords].distanceToOrigin = sqrt(pow(coord[contCoords].x, 2) + pow(coord[contCoords].y, 2)); // Calcula a distância daquele ponto para ao ponto (0,0)
 
-            // calcula distância para origem
-            coord[contCoords].distanceToOrigin = sqrt(pow(coord[contCoords].x, 2) + pow(coord[contCoords].y, 2)); // Calcula a distância daquele ponto para ao ponto (0,0)
-
-            // Aumenta o contador, contabilizando coordenada atual
-            contCoords++;
-
+                // Aumenta o contador, contabilizando coordenada atual
+                contCoords++;
+            }
             slice = strtok(NULL, space);
         }
 
