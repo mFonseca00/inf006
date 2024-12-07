@@ -91,6 +91,7 @@ int main()
 
     while (fgets(line, sizeof(line), fp_in) != NULL)
     {
+        line[strcspn(line, "\n")] = 0; // Remove o '\n' do final da linha para que o código leia o ultimo ponto
         int contCoords=0; // Contador para armazenar o número de pontos na linha
         char *slice = strtok(line, space);
 
