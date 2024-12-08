@@ -44,48 +44,106 @@ void swapCoordinates(coordenada *a, coordenada *b) {
     *b = temp;
 }
 
-// Função para ordenar strings alfabeticamente
-void sortStrings(char arr[][100], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = i + 1; j < n; j++) {
-            if (strcmp(arr[i], arr[j]) > 0) {
-                swapStrings(arr[i], arr[j]);
-            }
-        }
+
+//Funções de ordenação
+
+
+// Resolver o (Implicit declaration of function)
+int partitionStrings(char arr[][100], int low, int high);
+int partitionIntegers(int arr[], int low, int high);
+int partitionFloats(float arr[], int low, int high);
+int partitionCoordinates(coordenada arr[], int low, int high);
+
+
+// Função para ordenar strings alfabeticamente (Update to Quick Sort)
+void quickSortStrings(char arr[][100], int low, int high) {
+    if (low < high) {
+        int pi = partitionStrings(arr, low, high);
+        quickSortStrings(arr, low, pi - 1);
+        quickSortStrings(arr, pi + 1, high);
     }
 }
 
-// Função para ordenar inteiros
-void sortIntegers(int arr[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = i + 1; j < n; j++) {
-            if (arr[i] > arr[j]) {
-                swapIntegers(&arr[i], &arr[j]);
-            }
+int partitionStrings(char arr[][100], int low, int high) {
+    char pivot[100];
+    strcpy(pivot, arr[high]);
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++) {
+        if (strcmp(arr[j], pivot) < 0) {
+            i++;
+            swapStrings(arr[i], arr[j]);
         }
+    }
+    swapStrings(arr[i + 1], arr[high]);
+    return (i + 1);
+}
+
+
+// Função para ordenar inteiros (Update to Quick Sort)
+void quickSortIntegers(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partitionIntegers(arr, low, high);
+        quickSortIntegers(arr, low, pi - 1);
+        quickSortIntegers(arr, pi + 1, high);
     }
 }
 
-// Função para ordenar floats
-void sortFloats(float arr[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = i + 1; j < n; j++) {
-            if (arr[i] > arr[j]) {
-                swapFloats(&arr[i], &arr[j]);
-            }
+int partitionIntegers(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swapIntegers(&arr[i], &arr[j]);
         }
+    }
+    swapIntegers(&arr[i + 1], &arr[high]);
+    return (i + 1);
+}
+
+
+// Função para ordenar floats (Update to Quick Sort)
+void quickSortFloats(float arr[], int low, int high) {
+    if (low < high) {
+        int pi = partitionFloats(arr, low, high);
+        quickSortFloats(arr, low, pi - 1);
+        quickSortFloats(arr, pi + 1, high);
     }
 }
 
-// Função para ordenar coordenadas pela distância à origem
-void sortCoordinates(coordenada arr[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = i + 1; j < n; j++) {
-            if (arr[i].distanceToOrigin > arr[j].distanceToOrigin) {
-                swapCoordinates(&arr[i], &arr[j]);
-            }
+int partitionFloats(float arr[], int low, int high) {
+    float pivot = arr[high];
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swapFloats(&arr[i], &arr[j]);
         }
     }
+    swapFloats(&arr[i + 1], &arr[high]);
+    return (i + 1);
+}
+
+// Função para ordenar coordenadas pela distância à origem (Update to Quick Sort)
+void quickSortCoordinates(coordenada arr[], int low, int high) {
+    if (low < high) {
+        int pi = partitionCoordinates(arr, low, high);
+        quickSortCoordinates(arr, low, pi - 1);
+        quickSortCoordinates(arr, pi + 1, high);
+    }
+}
+
+int partitionCoordinates(coordenada arr[], int low, int high) {
+    float pivot = arr[high].distanceToOrigin;
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j].distanceToOrigin < pivot) {
+            i++;
+            swapCoordinates(&arr[i], &arr[j]);
+        }
+    }
+    swapCoordinates(&arr[i + 1], &arr[high]);
+    return (i + 1);
 }
 
 int main() {
@@ -122,10 +180,10 @@ int main() {
             token = strtok(NULL, " ");
         }
 
-        sortStrings(strings, stringCount);
-        sortIntegers(integers, intCount);
-        sortFloats(floats, floatCount);
-        sortCoordinates(coords, coordCount);
+        quickSortStrings(strings, 0, stringCount - 1);
+        quickSortIntegers(integers, 0, intCount - 1);
+        quickSortFloats(floats, 0, floatCount - 1);
+        quickSortCoordinates(coords, 0, coordCount - 1);
 
         // Formatar a saída
         fprintf(fp_out, "str:");
