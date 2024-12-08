@@ -2,7 +2,7 @@
 #include <stdlib.h> // Inclui a biblioteca padrão com funções gerais, incluindo atof
 #include <string.h> // Inclui a biblioteca de manipulação de strings
 #include <math.h> // Inclui a biblioteca math.h para funções matemáticas, incluindo sqrt e pow
-#define MaxCaractersLinha 1000
+#define MaxCaractersLinha 1000 // Define o tamanho máximo de uma linha lida do arquivo de entrada
 
 
 // struct para armazenar coordenadas
