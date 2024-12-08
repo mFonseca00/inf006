@@ -147,8 +147,8 @@ int partitionCoordinates(coordenada arr[], int low, int high) {
 }
 
 int main() {
-    FILE *fp_in = fopen("D:/ADS Facul/inf006-1/Trab1/L0Q2.in", "r");
-    FILE *fp_out = fopen("D:/ADS Facul/inf006-1/Trab1/L0Q2.out", "w");
+    FILE *fp_in = fopen("L0Q2.in", "r");
+    FILE *fp_out = fopen("L0Q2.out", "w");
 
     if (fp_in == NULL || fp_out == NULL) {
         printf("Erro ao abrir os arquivos.\n");
