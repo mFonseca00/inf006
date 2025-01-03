@@ -5,11 +5,43 @@
 
 #define MaxCaractersLinha 1000 // Define o tamanho máximo de uma linha lida do arquivo de entrada
 
+
 // definição da struct para cada nó de uma lista
-typedef struct reg {
-    int elemento;
+typedef struct reg{
+    int valor;
     struct reg *prox;
-} No;
+}No;
+
+// definição da struct para armazenar início da lista, a soma dos seus valores e seu tamanho
+typedef struct {
+    No *inicio;
+    int tam;
+    int soma;
+}lista;
+
+// Função para criar uma nova lista
+lista* criarLista(){
+    lista *novaLista = (lista*) malloc(sizeof(lista));
+    novaLista->inicio = NULL;
+    novaLista->tam = 0;
+    novaLista->soma = 0;
+
+    return novaLista; // Retorna o ponteiro da nova lista para ser adicionado no array
+}
+
+// Função para inserir novo elemento na lista de forma ordenada
+// void inserirListaOrdenada(lista *lista, int elemento){
+//     No *novo = malloc(sizeof(No));
+//     if(novo){
+//         lista->tam++;
+//         lista->soma+=elemento;
+
+//     }
+//     else{
+//         printf("Erro ao alocar memória para novo nó.\n");
+//         return EXIT_FAILURE;
+//     }
+// }
 
 int main(void){
     // Ponteiros para os arquivos de entrada e saída
@@ -22,8 +54,7 @@ int main(void){
         return EXIT_FAILURE;
     }
 
-    //inserir buffer para as listas
-
+    
     char line[MaxCaractersLinha]; // Buffer para armazenar cada linha lida do arquivo
 
     //Separadores
@@ -32,42 +63,56 @@ int main(void){
 
      while (fgets(line, sizeof(line), fp_in) != NULL)
     {
-        // line[strcspn(line, "\n")] = 0; // Remove o '\n' do final da linha para que o código leia o ultimo elemento
+
         char *slice = strtok(line, space);
         printf("\nNova linha\n"); // DEBUG
+
+        lista **arrListas = NULL; //array para armazenar as listas da linha (inicialmente aponta para NULL)
+        int tamArrListas=0; // Tamanho do array de listas
+        int listaAtual=0; // Posição atual a ser preenchida no array de listas
+
 
         //Separar os inteiros da lista com base no espaço
         while(slice!=NULL){
 
+            // Declaração de variáveis internas para aquela linha
             char elemento[] = "start";
             int inteiro;
+        
             // Obtém o elemento da lista de inteiros
             strcpy(elemento,slice);
+
             // Verifica se o elemento obtido é o marcador de início de lista (start) ou um elemento da lista
             if(strcmp(slice, start) == 0){
                 printf("\nLista:\n"); // DEBUG
-
-                // Cria uma nova lista
-
+                //Verifica se é necessário realocar o array
+                if(listaAtual>=tamArrListas){
+                    tamArrListas = (tamArrListas == 0) ? 1 : tamArrListas*2; // caso o tam seja 0, aumenta para 1, caso contrário, dobra
+                    arrListas = (lista**) realloc(arrListas, tamArrListas * sizeof(lista*)); // realoca o array de listas
+                    if(arrListas == NULL){
+                        printf("Falha na realocação de memória.\n"); // DEBUG
+                        return EXIT_FAILURE;
+                    }
+                }
+                // Cria a nova lista e insere seu ponteiro na array
+                arrListas[listaAtual]=criarLista();
+                if(arrListas[listaAtual] == NULL){
+                    printf("Erro ao alocar memória para nova lista.\n"); // DEBUG
+                    return EXIT_FAILURE;
+                }
+                printf("Nova lista criada.\n"); // DEBUG
             }
             else{
                 inteiro=atoi(elemento);
                 printf("Elemento obtido: %d\n",inteiro); // DEBUG
 
-                // Incrementa a quantidade de elementos naquela lista
-
-                // Salva o elemento na lista atual (já ordenando?)
-
-                // Atualiza a soma dos elementos da lista
+                // Salva o elemento na lista atual (já ordenando), atualizando a soma dos elementos dela
             }
             
 
             slice = strtok(NULL, space); // Avança para o próximo número na lista
         }
         
-
-        // Ordena de forma crescente os elementos de cada lista (Verificar se já foi feito)
-
         // Ordena de forma crescente as listas com base na soma de seus elementos
 
         // Converte as listas em uma string
