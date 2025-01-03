@@ -32,34 +32,39 @@ int main(void){
 
      while (fgets(line, sizeof(line), fp_in) != NULL)
     {
-        line[strcspn(line, "\n")] = 0; // Remove o '\n' do final da linha para que o código leia o ultimo elemento
+        // line[strcspn(line, "\n")] = 0; // Remove o '\n' do final da linha para que o código leia o ultimo elemento
         char *slice = strtok(line, space);
-        printf("Linha:\n"); // DEBUG
+        printf("\nNova linha\n"); // DEBUG
 
         //Separar os inteiros da lista com base no espaço
         while(slice!=NULL){
 
-            // Obtém o elemento da lista de inteiros
             char elemento[] = "start";
             int inteiro;
+            // Obtém o elemento da lista de inteiros
             strcpy(elemento,slice);
             // Verifica se o elemento obtido é o marcador de início de lista (start) ou um elemento da lista
             if(strcmp(slice, start) == 0){
-                printf("Lista:\n"); // DEBUG
+                printf("\nLista:\n"); // DEBUG
+
+                // Cria uma nova lista
+
             }
             else{
                 inteiro=atoi(elemento);
                 printf("Elemento obtido: %d\n",inteiro); // DEBUG
+
+                // Incrementa a quantidade de elementos naquela lista
+
+                // Salva o elemento na lista atual (já ordenando?)
+
+                // Atualiza a soma dos elementos da lista
             }
-
-            // Salva o elemento na lista atual (já ordenando?)
-
-            // Incrementa a quantidade de elementos naquela lista
-
-            // Atualiza a soma dos elementos da lista
+            
 
             slice = strtok(NULL, space); // Avança para o próximo número na lista
         }
+        
 
         // Ordena de forma crescente os elementos de cada lista (Verificar se já foi feito)
 
