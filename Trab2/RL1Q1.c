@@ -83,6 +83,21 @@ void freeLista (lista *lista){
     free(lista);
 }
 
+// Função para converter lista em uma string
+void listaParaString(lista *lista, char str[], size_t str_size){
+    str[0] = '\0';
+    No *atual = lista->inicio;
+    strcat(str,"start ");
+    while( atual != NULL){ //Varre a lista por completo
+        No *aux = atual;
+        atual = atual->prox;
+        snprintf(str + strlen(str), str_size - strlen(str), "%d ", aux->valor); //Printa na string, o valor atual da lista
+    }
+    if (strlen(str) > 0) {
+        str[strlen(str) - 1] = '\0'; // Remove o espaço extra no final da string
+    }
+}
+
 // Quicksort para ordenar listas com base na soma de seus elementos
 void trocar(lista **a, lista **b){ //troca dois ponteiros de lista
     lista *temp = *a;
@@ -112,7 +127,6 @@ void quickSortLista(lista **arr, int esq, int dir){
         quickSortLista(arr, indexPart+1, dir);
     }
 }
-
 
 int main(void){
     // Ponteiros para os arquivos de entrada e saída
@@ -202,10 +216,22 @@ int main(void){
         }
 
         // Converte as listas em uma string
+        char strLista[MaxCaractersLinha];
+        char strArrLista[MaxCaractersLinha];
+        strArrLista[0] = '\0'; // Inicializa strArrLista como uma string vazia.
+        for(int i=0; i<tamArrListas; i++){
+            listaParaString(arrListas[i], strLista, sizeof(strLista));
+            strcat(strArrLista,strLista);
+            if(i < tamArrListas-1){
+                strcat(strArrLista," ");
+            }
+        }
+        strcat(strArrLista,"\n");
+        printf("\nListas da linha %d:\t%s\n", contLinha, strArrLista); //DEBUG
 
 
-        // Formatação para impressão da linha de saída
-
+        // impreme a linha no arquivo de saída
+        fputs(strArrLista, fp_out);
 
         // Libera o espaço ocupado na memória
         // printf("\nIniciando exclusao das listas da linha %d\n", contLinha); // DEBUG
