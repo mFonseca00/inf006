@@ -57,7 +57,7 @@ void inserirOrdenadoLista(lista *lista, int elemento){
         }
     }
     else{
-        printf("Erro ao alocar memória para novo nó.\n");
+        printf("Erro ao alocar memória para novo nó.\n"); // Mensagem de erro
     }
 }
 
@@ -173,14 +173,14 @@ int main(void){
                     tamArrListas++;
                     arrListas = (lista **)realloc(arrListas, tamArrListas * sizeof(lista *)); // realoca o array de listas
                     if(arrListas == NULL){
-                        printf("Falha na realocacao de memoria.\n"); // DEBUG
+                        printf("Falha na realocacao de memoria.\n"); // Mensagem de
                         return EXIT_FAILURE;
                     }
                 }
                 // Cria a nova lista e insere seu ponteiro na array
                 arrListas[listaAtual]=criarLista();
                 if(arrListas[listaAtual] == NULL){
-                    printf("Erro ao alocar memoria para nova lista.\n"); // DEBUG
+                    printf("Erro ao alocar memoria para nova lista.\n"); // Mensagem de erro
                     return EXIT_FAILURE;
                 }
                 // printf("Nova lista criada, lista atual: %d.\n", listaAtual); // DEBUG
@@ -195,25 +195,25 @@ int main(void){
                     inserirOrdenadoLista(arrListas[listaAtual-1], inteiro);
                 }
                 else{
-                    printf("Erro: lista nao alocada\n"); // DEBUG
+                    printf("Erro: lista nao alocada\n"); // Mensagem de erro
                 }
             }
             slice = strtok(NULL, space); // Avança para o próximo número na lista
         }
 
-        printf("\n----------------------------Listas da linha %d----------------------------\n\n", contLinha); //DEBUG
-        for(int i = 0; i<tamArrListas; i++){ //DEBUG
-            printf("Lista %d: ",i); //DEBUG
-            printLista(arrListas[i]); //DEBUG
-        }
+        // printf("\n----------------------------Listas da linha %d----------------------------\n\n", contLinha); //DEBUG
+        // for(int i = 0; i<tamArrListas; i++){ //DEBUG
+        //     printf("Lista %d: ",i); //DEBUG
+        //     printLista(arrListas[i]); //DEBUG
+        // }
 
         // Ordena de forma crescente as listas com base na soma de seus elementos (quicksort em arrListas com base em lista->soma)
         quickSortLista(arrListas,0, tamArrListas-1);
-        printf("Listas ordenadas de forma crescente:\n"); //DEBUG
-        for(int i = 0; i<tamArrListas; i++){ //DEBUG
-            printf("Lista %d: ",i); //DEBUG
-            printLista(arrListas[i]); //DEBUG
-        }
+        // printf("Listas ordenadas de forma crescente:\n"); //DEBUG
+        // for(int i = 0; i<tamArrListas; i++){ //DEBUG
+        //     printf("Lista %d: ",i); //DEBUG
+        //     printLista(arrListas[i]); //DEBUG
+        // }
 
         // Converte as listas em uma string
         char strLista[MaxCaractersLinha];
@@ -227,7 +227,7 @@ int main(void){
             }
         }
         strcat(strArrLista,"\n");
-        printf("\nListas da linha %d:\t%s\n", contLinha, strArrLista); //DEBUG
+        // printf("\nListas da linha %d:\t%s\n", contLinha, strArrLista); //DEBUG
 
 
         // impreme a linha no arquivo de saída
