@@ -35,6 +35,15 @@ No* pop(No **top){
     return NULL;
 }
 
+void imprimir_pilha(No *top){
+    printf("\n-----PILHA-----\n");
+    while(top!=NULL){
+        printf("%d",top->valor);
+        top=top->prox;
+    }
+    printf("\n------FIM------\n");
+}
+
 int main(void){
     No *top = NULL, *removido = NULL;
     int opcao=-1;
@@ -57,7 +66,7 @@ int main(void){
                 }
                 break;
             case 3:
-
+                imprimir_pilha();
                 break;
             default:
                 printf("\nOpcao invalida.\n");
