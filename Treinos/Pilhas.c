@@ -50,6 +50,7 @@
 //     int opcao=-1;
 //     do{
 //         printf("\n0 - Sair\n1- PUSH\n2 - POP\n3 - Imprimir\n");
+//         scanf("%d",&opcao);
 //         switch (opcao){
 //             case 1:
 //                 int valor;
@@ -74,14 +75,13 @@
 //                 break;
 //         }
 //     }while(opcao!=0)
-    
 // }
 
 //MODO 2: pilha com cabeçote
 
 typedef struct no{
     int valor;
-    struct no *proximo;
+    struct no *prox;
 }No;
 
 typedef struct{
@@ -98,7 +98,7 @@ void push(Pilha *p, int valor){
     No *novo = malloc(sizeof(No));
     if(novo){
         novo->valor = valor;
-        novo->proximo = p->top;
+        novo->prox = p->top;
         p->top = novo;
         p->tam++;
     }
@@ -121,10 +121,10 @@ No* pop(Pilha *p){
 }
 
 void imprimir_pilha(Pilha *p){
-    printf("\n-----PILHA de tamanho: %d-----\n",p->tam);
+    printf("\n-----PILHA de tamanho: %d-----\n\n",p->tam);
     No *aux = p->top;
     while(aux!=NULL){
-        printf("%d",aux->valor);
+        printf("%d\n",aux->valor);
         aux=aux->prox;
     }
     printf("\n------FIM------\n");
@@ -134,17 +134,23 @@ int main(void){
     No *removed = NULL;
     Pilha p;
     int opcao=-1;
+    int insert;
+
 
     criar_pilha(&p);
 
     do{
-        printf("\n0 - Sair\n1- PUSH\n2 - POP\n3 - Imprimir\n");
+        printf("\n\n------------------------------------MENU------------------------------------\n");
+        printf("\n0 - Sair\n1 - PUSH\n2 - POP\n3 - Imprimir\n");
+        scanf("%d",&opcao);
         switch (opcao){
+            case 0:
+                printf("\nSaindo...");
+                break;
             case 1:
-                int valor;
                 printf("\nDigite o valor a ser inserido: ");
-                scanf("%d",&valor);
-                push(&p, valor);
+                scanf("%d",&insert);
+                push(&p, insert);
                 break;
             case 2:
                 removed = pop(&p);
@@ -163,6 +169,7 @@ int main(void){
                 printf("\nOpcao invalida.\n");
                 break;
         }
-    }while(opcao!=0)
+        printf("\n\n----------------------------------------------------------------------------\n");
+    }while(opcao!=0);
     
 }
