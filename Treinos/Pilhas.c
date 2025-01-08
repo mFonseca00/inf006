@@ -128,6 +128,7 @@ void imprimir_pilha(Pilha *p){
         aux=aux->prox;
     }
     printf("\n------FIM------\n");
+    free(aux);
 }
 
 int main(void){
