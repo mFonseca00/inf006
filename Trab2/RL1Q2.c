@@ -54,10 +54,11 @@ void imprimir_pilha(Pilha *p) {
     printf("\n------FIM------\n\n");
 }
 
-void pushOrdenado(Pilha *p, char novoNome[], char retorno[]){
-   // Ponteiros para os arquivos de entrada e saída
-    FILE *fp_in = fopen("L1Q1.in", "r"); // Abre o arquivo de leitura ("r")
-    FILE *fp_out = fopen("L1Q1.out", "w"); // Abre o arquivo de escrita ("w")
+int main(void){
+
+    // Ponteiros para os arquivos de entrada e saída
+    FILE *fp_in = fopen("L1Q2.in", "r"); // Abre o arquivo de leitura ("r")
+    FILE *fp_out = fopen("L1Q2.out", "w"); // Abre o arquivo de escrita ("w")
 
     if (fp_in == NULL || fp_out == NULL) // Tratamento de erro
     {
@@ -67,11 +68,61 @@ void pushOrdenado(Pilha *p, char novoNome[], char retorno[]){
 
     char line[MaxCaractersLinha]; // Buffer para armazenar cada linha lida do arquivo
     const char space[] = " "; // Separador entre itens da linha
-    
 
+    Pilha p,auxP;
     
-}
+    while (fgets(line, sizeof(line), fp_in) != NULL)
+    {
+        line[strcspn(line, "\n")] = 0; // Remove o \n do final da string para evitar bug
+        char *slice = strtok(line, space); // Obtem o primeiro nome da linha
+        // printf("\n\nNova linha\n"); // DEBUG
 
-int main(void){
-    
+        initPilha(&p); // Inicializa a pilha principal - pilha a ser ordenada
+        initPilha(&auxP); // Inicializa a pilha auxiliar - essa pilha sempre estará ordenada com base na principal
+        No *auxPop = NULL; // Nó auxiliar para função Pop
+        No *anterior = NULL; //Nó auxiliar para armazenar o ultimo elemento da pilha principal
+
+        while(slice!=NULL){
+            // printf("Elemento obtido: %s\n",slice); // DEBUG
+            
+            push(&p,slice); // Insere o primeiro nome na pilha principal
+            anterior = p.top; //Atualiza o valor do nó anterior para o ultimo nó da pilha(primairo)
+            int contPop = 0; // Variável utilizada para contabilizar as remoçoes realizadas no próximo while
+
+            while(p.top!=NULL && (strcmp(slice, anterior->nome)<0)){ // caso o nome a ser adicionado deva ficar no final da pilha (ser oprimeiro a ser adicionado)
+                printf("%s deve vir antes de %s\n", anterior->nome, slice); // DEBUG
+                auxPop = pop(&p); // Retira o nome do topo da pilha principal(anterior)
+                contPop++;
+                push(&auxP,auxPop->nome); // Insere o nome removido da outra pilha (anterior) na pilha auxiliar
+                anterior = anterior->prox; // Atualiza para verificar o próximo elemento da pilha principal                
+            }
+
+            if(contPop>1){ // Realizado apenas quando hover alteração de ordem na pilha principal
+                push(&p,slice); // Insere o novo nome obtido do arquivo de entrada no topo da pilha principal
+                // Imprimir no arquivo o número de pops realizados (armazenados em contPop)
+            }
+            // Imprimir no arquivo o push realizado
+
+            while(auxP.top=NULL){ // Varre a pilha auxiliar por completo, copiando os elementos para pilha principal
+                auxPop = pop(&auxP);
+                push(&p,auxPop->nome);
+                // Imprimir no arquivo cada push realizado
+            }
+            
+
+            slice = strtok(NULL, space); // Avança para o próximo nome na linha
+        }
+
+        printf("p.top: %s\n",p.top); //DEBUG
+        imprimir_pilha(&p); //DEBUG
+
+        if(slice){
+            fprintf(fp_out,"\n"); // Insere "\n" caso haja próxima linha
+        }
+
+    }
+
+    fclose(fp_in);
+    fclose(fp_out);
+    return EXIT_SUCCESS;
 }
