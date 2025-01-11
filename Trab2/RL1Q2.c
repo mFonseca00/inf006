@@ -75,6 +75,8 @@ int main(void){
     {
         line[strcspn(line, "\n")] = 0; // Remove o \n do final da string para evitar bug
         char *slice = strtok(line, space); // Obtem o primeiro nome da linha
+        char textOut[MaxCaractersLinha]=""; // Buffer para armazenar o texto de saída para uma linha
+        char textAux[50]; // Buffer auxiliar para armazenar o texto concatenado na string de saída
         // printf("\n\nNova linha\n"); // DEBUG
 
         initPilha(&p); // Inicializa a pilha principal - pilha a ser ordenada
@@ -83,8 +85,8 @@ int main(void){
 
         while(slice!=NULL){
             // printf("Elemento obtido: %s\n",slice); // DEBUG
-            
             int contPop = 0; // Variável utilizada para contabilizar as remoçoes realizadas no próximo while
+            
 
             while(p.top != NULL && strcmp(slice, p.top->nome) < 0){ // caso o nome a ser adicionado deva ficar no final da pilha (ser oprimeiro a ser adicionado)
                 // printf("%s deve vir depois de %s\n", p.top->nome, slice); // DEBUG
@@ -93,32 +95,53 @@ int main(void){
                 push(&auxP,auxPop->nome); // Insere o nome removido da outra pilha (anterior) na pilha auxiliar
             }
 
+            // Imprimir na linha o número de pops, se houveram
             if(contPop>0){ // Realizado apenas quando hover alteração de ordem na pilha principal
-                printf("%dx-pop ",contPop); //DEBUG
-                // Imprimir no arquivo o número de pops realizados (armazenados em contPop)
+                // printf("%dx-pop ",contPop); //DEBUG
+                sprintf(textAux,"%dx-pop ",contPop); // salva na strig auxiliar o número de pops realizados (armazenados em contPop)
+                // printf("\n|textAux: %s ",textAux); //DEBUG
+                strcat(textOut,textAux); // concatena a string auxiliar no texto de saída
+                // printf("|textOut: %s|\n",textOut); //DEBUG
             }
 
+            // Imprimir na linha o push realizado
             push(&p,slice); // Insere o primeiro nome na pilha principal ADD
-            printf("push-%s ",p.top->nome); //DEBUG
-            // Imprimir no arquivo o push realizado
+            // printf("push-%s ",p.top->nome); //DEBUG
+            sprintf(textAux,"push-%s ",p.top->nome); // salva na strig auxiliar o push realizado
+            // printf("\n|textAux: %s ",textAux); //DEBUG
+            strcat(textOut,textAux); // concatena a string auxiliar no texto de saída
+            // printf("|textOut: %s|\n",textOut); //DEBUG
+            
 
             while(auxP.top!=NULL){ // Varre a pilha auxiliar por completo, copiando os elementos para pilha principal
                 auxPop = pop(&auxP);
                 push(&p,auxPop->nome);
-                printf("push-%s ",auxPop->nome); //DEBUG
-                // Imprimir no arquivo cada push realizado
+
+                // Imprimir na linha cada push realizado após a reordenação
+                // printf("push-%s ",auxPop->nome); //DEBUG
+                sprintf(textAux,"push-%s ",auxPop->nome); // salva na strig auxiliar o push realizado
+                // printf("\n|textAux: %s ",textAux); //DEBUG
+                strcat(textOut,textAux); // concatena a string auxiliar no texto de saída
+                // printf("|textOut: %s|\n",textOut); //DEBUG
             }
-            
             slice = strtok(NULL, space); // Avança para o próximo nome na linha
-            
         }
 
         // printf("p.top: %s\n",p.top); //DEBUG
         // imprimir_pilha(&p); //DEBUG
-        printf("\n"); //DEBUG
+        // printf("textOut: %s",textOut); //DEBUG
 
-        if(slice){
-            fprintf(fp_out,"\n"); // Insere "\n" caso haja próxima linha
+        // Imprimir linha no arquivo
+        printf("%s",textOut);
+        fputs(textOut,fp_out); // Insere o texto de saída da linha no arquivo
+        
+        if (feof(fp_in))// Verifica se a leitura chegou ao fim do arquivo
+        {
+            break;
+        }
+        else{
+             printf("\n"); //DEBUG
+             fputs("\n",fp_out); // Insere "\n" no arquivo de saída caso haja próxima linha
         }
     }
 
