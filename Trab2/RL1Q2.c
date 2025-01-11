@@ -80,50 +80,46 @@ int main(void){
         initPilha(&p); // Inicializa a pilha principal - pilha a ser ordenada
         initPilha(&auxP); // Inicializa a pilha auxiliar - essa pilha sempre estará ordenada com base na principal
         No *auxPop = NULL; // Nó auxiliar para função Pop
-        No *anterior = NULL; //Nó auxiliar para armazenar o ultimo elemento da pilha principal
 
         while(slice!=NULL){
             // printf("Elemento obtido: %s\n",slice); // DEBUG
             
-            push(&p,slice); // Insere o primeiro nome na pilha principal
-            anterior = p.top; //Atualiza o valor do nó anterior para o ultimo nó da pilha(primairo)
             int contPop = 0; // Variável utilizada para contabilizar as remoçoes realizadas no próximo while
 
-            // PROBLEMA ABAIXO
-
-            while(p.top!=NULL && (strcmp(slice, anterior->nome)<0)){ // caso o nome a ser adicionado deva ficar no final da pilha (ser oprimeiro a ser adicionado)
-                printf("%s deve vir antes de %s\n", anterior->nome, slice); // DEBUG
+            while(p.top != NULL && strcmp(slice, p.top->nome) < 0){ // caso o nome a ser adicionado deva ficar no final da pilha (ser oprimeiro a ser adicionado)
+                // printf("%s deve vir depois de %s\n", p.top->nome, slice); // DEBUG
                 auxPop = pop(&p); // Retira o nome do topo da pilha principal(anterior)
                 contPop++;
                 push(&auxP,auxPop->nome); // Insere o nome removido da outra pilha (anterior) na pilha auxiliar
-                anterior = anterior->prox; // Atualiza para verificar o próximo elemento da pilha principal                
             }
 
-            // PROBLEMA ACIMA
-
-            if(contPop>1){ // Realizado apenas quando hover alteração de ordem na pilha principal
-                push(&p,slice); // Insere o novo nome obtido do arquivo de entrada no topo da pilha principal
+            if(contPop>0){ // Realizado apenas quando hover alteração de ordem na pilha principal
+                printf("%dx-pop ",contPop); //DEBUG
                 // Imprimir no arquivo o número de pops realizados (armazenados em contPop)
             }
+
+            push(&p,slice); // Insere o primeiro nome na pilha principal ADD
+            printf("push-%s ",p.top->nome); //DEBUG
             // Imprimir no arquivo o push realizado
 
-            while(auxP.top=NULL){ // Varre a pilha auxiliar por completo, copiando os elementos para pilha principal
+            while(auxP.top!=NULL){ // Varre a pilha auxiliar por completo, copiando os elementos para pilha principal
                 auxPop = pop(&auxP);
                 push(&p,auxPop->nome);
+                printf("push-%s ",auxPop->nome); //DEBUG
                 // Imprimir no arquivo cada push realizado
             }
             
-
             slice = strtok(NULL, space); // Avança para o próximo nome na linha
+            
         }
 
-        printf("p.top: %s\n",p.top); //DEBUG
-        imprimir_pilha(&p); //DEBUG
+        // printf("p.top: %s\n",p.top); //DEBUG
+        // imprimir_pilha(&p); //DEBUG
+        printf("\n"); //DEBUG
 
         if(slice){
             fprintf(fp_out,"\n"); // Insere "\n" caso haja próxima linha
         }
-
     }
 
     fclose(fp_in);
