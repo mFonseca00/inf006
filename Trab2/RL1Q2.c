@@ -89,6 +89,8 @@ int main(void){
             anterior = p.top; //Atualiza o valor do nó anterior para o ultimo nó da pilha(primairo)
             int contPop = 0; // Variável utilizada para contabilizar as remoçoes realizadas no próximo while
 
+            // PROBLEMA ABAIXO
+
             while(p.top!=NULL && (strcmp(slice, anterior->nome)<0)){ // caso o nome a ser adicionado deva ficar no final da pilha (ser oprimeiro a ser adicionado)
                 printf("%s deve vir antes de %s\n", anterior->nome, slice); // DEBUG
                 auxPop = pop(&p); // Retira o nome do topo da pilha principal(anterior)
@@ -96,6 +98,8 @@ int main(void){
                 push(&auxP,auxPop->nome); // Insere o nome removido da outra pilha (anterior) na pilha auxiliar
                 anterior = anterior->prox; // Atualiza para verificar o próximo elemento da pilha principal                
             }
+
+            // PROBLEMA ACIMA
 
             if(contPop>1){ // Realizado apenas quando hover alteração de ordem na pilha principal
                 push(&p,slice); // Insere o novo nome obtido do arquivo de entrada no topo da pilha principal
