@@ -86,6 +86,7 @@
 
 //MODO 2: pilha com cabeçote
 
+
 typedef struct no{
     int valor;
     struct no *prox;
