@@ -3,6 +3,5 @@
         "stdlib.h": "c",
         "stdio.h": "c",
         "math.h": "c",
-        "RL1Q2.C": "cpp"
     }
 }
