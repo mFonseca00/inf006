@@ -1,3 +1,5 @@
+// Integrantes da equipe: Ana Emilia Lobo e Martfeld Mutim (20241160001) Marcus Vinicius Silva da Fonseca (20241160005) e Roberto Silva Barreto (20241160031)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

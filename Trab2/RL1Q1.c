@@ -1,3 +1,5 @@
+// Integrantes da equipe: Ana Emilia Lobo e Martfeld Mutim (20241160001) Marcus Vinicius Silva da Fonseca (20241160005) e Roberto Silva Barreto (20241160031)
+
 #include <stdio.h> // Inclui a biblioteca padrão de entrada e saída
 #include <stdlib.h> // Inclui a biblioteca padrão com funções gerais, incluindo atof
 #include <string.h> // Inclui a biblioteca de manipulação de strings
