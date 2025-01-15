@@ -61,7 +61,8 @@
 // int opcao, num;
 
 // do{
-//     printf"0 - sair\n1 - inseri\n2 - remover\n3 - imprimir fila\n")
+//     printf"0 - sair\n1 - inseri\n2 - remover\n3 - imprimir fila\n");
+//     scanf("%d",&opcao);
 //     switch(opcao){
 //         case 1:
 //             printf("Digite o valor a inserir na fila:\t");
@@ -70,15 +71,15 @@
 //             break;
 //         case 2:
 //             removido = *remove_fila(&fila);
-//             printf("Valor removido da fila:\t%d\n", removido.valor);
+//             printf("Valor removido da fila:\t%d\n", removido->valor);
 //             free(removido);
 //             break;
 //         case 3:
-//             print_fila(&fila);
+//             print_fila(fila);
 //             break;
 //         default:
 //         if(opcao!=0){
-//             printf("Opcao invalida!\n")
+//             printf("Opcao invalida!\n");
 //         }      
 //     }
 //  }while(opcao!=0);
@@ -91,3 +92,91 @@ typedef struct no{
     int valor;
     struct no *prox;
 }No;
+
+typedef struct {
+    No *first;
+    No *last;
+    int tam;
+}Fila;
+
+void criar_fila(Fila *fila){
+    fila->first=NULL;
+    fila->last=NULL;
+    fila->tam=0;
+}
+
+void insert_fila(Fila *fila, int num){
+    No *novo = malloc(sizeof(No));
+    if(novo){
+        novo->valor = num;
+        novo->prox = NULL;
+        if(fila->first == NULL){ //Caso seja o primeiro elemento da fila (fila vazia)
+            fila->first = novo;
+            fila->last = novo;
+        }
+        else{ //Caso não seja o primeiro elemento da fila
+            fila->last->prox = novo;
+            fila->last = novo;
+        }
+        fila->tam++;
+    }
+    else{
+        printf("\n\n(!) - Erro ao alocar memória\n\n");
+    }
+}
+
+No *remove_fila(Fila *fila){
+    No *removed = NULL;
+
+    if(fila->first){
+        removed = fila->first;
+        fila->first = removed->prox;
+        fila->tam--;        
+    }
+    else{
+        printf("\n\nFila vazia!\n\n");
+    }
+
+    return removed;
+}
+
+void print_fila(Fila *fila){
+    No *aux = fila->first;
+    printf("\n-----FILA-----\n");
+    while(aux){
+        printf("%d ", aux->valor);
+        aux = aux->prox;
+    }
+    printf("\n-----FIM-----\n");
+}
+
+int main(void){
+    No *removido;
+    Fila fila;
+    int opcao, num;
+
+    criar_fila(&fila);
+    do{
+        printf("0 - sair\n1 - inserir\n2 - remover\n3 - imprimir fila\n");
+        scanf("%d",&opcao);
+        switch(opcao){
+            case 1:
+                printf("Digite o valor a inserir na fila:\t");
+                scanf("%d",&num);
+                insert_fila(&fila,num);
+                break;
+            case 2:
+                removido = remove_fila(&fila);
+                printf("Valor removido da fila:\t%d\n", removido->valor);
+                free(removido);
+                break;
+            case 3:
+                print_fila(&fila);
+                break;
+            default:
+            if(opcao!=0){
+                printf("Opcao invalida!\n");
+            }      
+        }
+    }while(opcao!=0);
+}
