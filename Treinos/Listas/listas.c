@@ -275,35 +275,57 @@ void print_lista(Lista *lista){
 
 }
 
+void cat_list(Lista *list, Lista *insertlist){
+    No *aux = insertlist->inicio;
+    while(aux){
+        insert_ord(list, aux->valor);
+        aux=aux->prox;
+    }
+}
+
 int main(void){
     No *removido,*busca;
-    Lista lista;
+    Lista lista, listaA, listaB;
+    init_list(&listaA);
+    init_list(&listaB);
     init_list(&lista);
     int opcao, num, ant;
 
     do{
-        printf("\n0 - sair\n1 - inserir no inicio\n2 - inserir no meio\n3 - inserir no fim\n4 - inserir ordenado\n5 - remover valor\n6 - Imprimir Lista\n7 - Buscar valor\n");
+        printf("\n0 - sair\n1 - inserir no inicio\n2 - inserir no meio\n3 - inserir no fim\n4 - inserir ordenado\n5 - remover valor\n6 - Imprimir Lista\n7 - Buscar valor\n8 - copiar\n");
         scanf("%d",&opcao);
         switch(opcao){
             case 1:
-                printf("Digite o valor a inserir na lista:\t");
+                printf("Digite o valor a inserir na lista A:\t");
                 scanf("%d",&num);
-                insert_inicio(&lista,num);
+                insert_inicio(&listaA,num);
+                printf("Digite o valor a inserir na lista B:\t");
+                scanf("%d",&num);
+                insert_inicio(&listaB,num);
                 break;
             case 2:
-                printf("Digite o valor a inserir na lista e o valor de referencia(anterior):\t");
+                printf("Digite o valor a inserir na lista A e o valor de referencia(anterior):\t");
                 scanf("%d%d",&num, &ant);
-                insert_meio(&lista,num,ant);
+                insert_meio(&listaA,num,ant);
+                printf("Digite o valor a inserir na lista B e o valor de referencia(anterior):\t");
+                scanf("%d%d",&num, &ant);
+                insert_meio(&listaB,num,ant);
                 break;
             case 3:
-                printf("Digite o valor a inserir na lista:\t");
+                printf("Digite o valor a inserir na lista A:\t");
                 scanf("%d",&num);
-                insert_fim(&lista,num);
+                insert_fim(&listaA,num);
+                printf("Digite o valor a inserir na lista B:\t");
+                scanf("%d",&num);
+                insert_fim(&listaB,num);
                 break;
             case 4:
-                printf("Digite o valor a inserir na lista:\t");
+                printf("Digite o valor a inserir na listaA:\t");
                 scanf("%d",&num);
-                insert_ord(&lista,num);
+                insert_ord(&listaA,num);
+                printf("Digite o valor a inserir na listaB:\t");
+                scanf("%d",&num);
+                insert_ord(&listaB,num);
                 break;
             case 5:
                 printf("Digite o valor a remover da lista:\t");
@@ -318,6 +340,11 @@ int main(void){
                 }
                 break;
             case 6:
+                printf("Lista A: ");
+                print_lista(&listaA);
+                printf("Lista B: ");
+                print_lista(&listaB);
+                printf("Lista Final: ");
                 print_lista(&lista);
                 break;
             case 7:
@@ -326,10 +353,15 @@ int main(void){
                 busca = search_from_list(&lista,num);
                 if(busca){
                     printf("Valor %d encontrado\n",busca->valor);
+                    free(busca);
                 }
                 else{
                     printf("Valor nao encontrado\n");
                 }
+                break;
+            case 8:
+                cat_list(&lista,&listaA);
+                cat_list(&lista,&listaB);
                 break;
             default:
                 if(opcao!=0){
