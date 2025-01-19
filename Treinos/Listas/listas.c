@@ -266,33 +266,62 @@ No *search_from_list(Lista *lista, int num){
 
 void print_lista(Lista *lista){
     No *aux = lista->inicio;
-    printf("\n-----Lista Tam:%d-----\n",lista->tam);
+    printf("\nLista Tam:%d - \t",lista->tam);
     while(aux){
         printf("%d\t",aux->valor);
         aux=aux->prox;
     }
-    printf("\n----------------------\n\n");
+    printf("\n");
 
 }
 
 void cat_list(Lista *list, Lista *insertlist){
     No *aux = insertlist->inicio;
-    while(aux){
-        insert_ord(list, aux->valor);
-        aux=aux->prox;
+    if(aux)
+    {
+        while(aux){
+            insert_ord(list, aux->valor);
+            aux=aux->prox;
+        }
     }
+    else{
+        printf("Lista a ser inserida é vazia\n");
+    }
+}
+
+void div_list(Lista *list, Lista *parlist, Lista *imparlist){
+    No *aux = list->inicio;
+    if(aux){
+        while(aux){
+        if(aux->valor>0){
+            if(aux->valor %2 == 0){
+                insert_ord(parlist,aux->valor);
+            }
+            else{
+                insert_ord(imparlist,aux->valor);
+            }
+            aux=aux->prox;
+        }
+        }
+    }
+    else{
+        printf("Lista final vazia\n");
+    }
+    
 }
 
 int main(void){
     No *removido,*busca;
-    Lista lista, listaA, listaB;
+    Lista lista, listaA, listaB, listaP, listaI;
     init_list(&listaA);
     init_list(&listaB);
     init_list(&lista);
+    init_list(&listaP);
+    init_list(&listaI);
     int opcao, num, ant;
 
     do{
-        printf("\n0 - sair\n1 - inserir no inicio\n2 - inserir no meio\n3 - inserir no fim\n4 - inserir ordenado\n5 - remover valor\n6 - Imprimir Lista\n7 - Buscar valor\n8 - copiar\n");
+        printf("\n0 - sair\n1 - inserir no inicio\n2 - inserir no meio\n3 - inserir no fim\n4 - inserir ordenado\n5 - remover valor\n6 - Imprimir Lista\n7 - Buscar valor\n8 - copiar\n9 - Dividir lista final em par e impar\n");
         scanf("%d",&opcao);
         switch(opcao){
             case 1:
@@ -346,6 +375,10 @@ int main(void){
                 print_lista(&listaB);
                 printf("Lista Final: ");
                 print_lista(&lista);
+                printf("Lista Par: ");
+                print_lista(&listaP);
+                printf("Lista Par: ");
+                print_lista(&listaI);
                 break;
             case 7:
                 printf("Digite o valor a buscar na lista:\t");
@@ -363,6 +396,9 @@ int main(void){
                 cat_list(&lista,&listaA);
                 cat_list(&lista,&listaB);
                 break;
+            case 9:
+                div_list(&lista,&listaP,&listaI);
+                break;
             default:
                 if(opcao!=0){
                     printf("Opcao invalida!\n");
@@ -370,4 +406,5 @@ int main(void){
                 break;     
         }
     }while(opcao!=0);
+    return 0;
 }
