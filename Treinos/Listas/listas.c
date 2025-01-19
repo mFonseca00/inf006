@@ -1,0 +1,315 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Lista - > Não possui regra para inserção ou remoção de nó. Estrutura mais genérica
+// Pode possuir diferentes operações
+
+//MODO 1: lista simplesmente encadeada sem cabeçote (usa ponteiro para ponteiro)
+
+// typedef struct no{
+//     int valor;
+//     struct no *prox;
+// }No;
+
+// void insert_inicio(No **lista, int num){
+//     No *novo=malloc(sizeof(No));
+//     if(novo){
+//         novo->valor = num;
+//         novo->prox = *lista;
+//         *lista = novo;
+//     }
+//     else{
+//         printf("Falha ao alocar memória para o novo no");
+//     }
+// }
+
+// void insert_fim(No **lista, int num){
+//     No *novo=malloc(sizeof(No)),*aux;
+//     if(novo){
+//         novo->valor=num;
+//         novo->prox=NULL;
+        
+//         if(*lista==NULL){
+//             *lista = novo;
+//         }
+//         else{
+//             aux=*lista;
+//             while(aux->prox){
+//                 aux = aux->prox;
+//             }
+//             aux->prox=novo;
+//         }
+        
+//     }
+//     else{
+//         printf("Falha ao alocar memória para o novo no\n");
+//     }
+// }
+
+// void insert_meio(No **lista, int num, int anterior){
+//     No *novo=malloc(sizeof(No)),*aux;
+//     int i=0;
+//     if(novo){
+//         novo->valor=num;
+//         if(*lista==NULL){
+//             novo->prox = NULL;
+//             *lista = novo;
+//             printf("Lista vazia, adicionando como primeiro elemento\n");
+//         }
+//         else{
+//             aux=*lista;
+//             while(i<anterior && aux->prox){
+//                 aux = aux->prox;
+//                 i++;
+//             }
+//             if(i<anterior){
+//                 printf("Valor de referência não encontrado, adicionando ao final da lista\n");
+//             }
+//             novo->prox=aux->prox;
+//             aux->prox=novo;
+//         }
+//     }
+//     else{
+//         printf("Falha ao alocar memória para o novo no\n");
+//     }
+// }
+
+// void print_lista(No *lista){
+//     printf("\n-----Lista-----\n");
+//     while(lista){
+//         printf("%d\t",lista->valor);
+//         lista=lista->prox;
+//     }
+//     printf("\n---------------\n");
+
+// }
+
+// int main(void){
+//     No *removido, *lista =NULL;
+//     int opcao, num, ant;
+
+//     do{
+//         printf("0 - sair\n1 - inserir no inicio\n2 - inserir no meio\n3 - inserir no fim\n4 - imprimir lista\n");
+//         scanf("%d",&opcao);
+//         switch(opcao){
+//             case 1:
+//                 printf("Digite o valor a inserir na lista:\t");
+//                 scanf("%d",&num);
+//                 insert_inicio(&lista,num);
+//                 break;
+//             case 2:
+//                 printf("Digite o valor a inserir na lista e a posicao de referencia(anterior):\t");
+//                 scanf("%d%d",&num, &ant);
+//                 insert_meio(&lista,num,ant);
+//                 break;
+//             case 3:
+//                 printf("Digite o valor a inserir na lista:\t");
+//                 scanf("%d",&num);
+//                 insert_fim(&lista,num);
+//                 break;
+//             case 4:
+//                 print_lista(lista);
+//                 break;
+//             default:
+//                 if(opcao!=0){
+//                     printf("Opcao invalida!\n");
+//                 }
+//                 break;     
+//         }
+//     }while(opcao!=0);
+// }
+
+//MODO 2: lista simplesmente encadeada com cabeçote
+
+typedef struct no{
+    int valor;
+    struct no *prox;
+}No;
+
+typedef struct{
+    No *inicio;
+    int tam;
+}Lista;
+
+void init_list(Lista *lista){
+    lista ->inicio = NULL;
+    lista->tam = 0;
+}
+
+void insert_inicio(Lista *lista, int num){
+    No *novo=malloc(sizeof(No));
+    if(novo){
+        novo->valor = num;
+        novo->prox = lista->inicio;
+        lista->inicio = novo;
+        lista->tam++;
+    }
+    else{
+        printf("Falha ao alocar memória para o novo no");
+    }
+}
+
+void insert_fim(Lista *lista, int num){
+    No *novo=malloc(sizeof(No)),*aux;
+    if(novo){
+        novo->valor = num;
+        novo->prox=NULL;
+        
+        if(lista->inicio==NULL){
+            lista->inicio = novo;
+        }
+        else{
+            aux=lista->inicio;
+            while(aux->prox){
+                aux = aux->prox;
+            }
+            aux->prox=novo;
+        }
+        lista->tam++;
+    }
+    else{
+        printf("Falha ao alocar memória para o novo no\n");
+    }
+}
+
+void insert_meio(Lista *lista, int num, int anterior){
+    No *novo=malloc(sizeof(No)),*aux;
+    if(novo){
+        novo->valor=num;
+        if(lista->inicio==NULL){
+            novo->prox = NULL;
+            lista->inicio = novo;
+        }
+        else{
+            aux=lista->inicio;
+            while(aux->valor != anterior && aux->prox){
+                aux = aux->prox;
+            }
+            novo->prox=aux->prox;
+            aux->prox=novo;
+        }
+        lista->tam++;
+    }
+    else{
+        printf("Falha ao alocar memória para o novo no\n");
+    }
+}
+
+void insert_ord(Lista *lista, int num){
+    No *novo=malloc(sizeof(No)),*aux;
+    if(novo){
+        novo->valor=num;
+        if(lista->inicio==NULL){
+            novo->prox = NULL;
+            lista->inicio = novo;
+        }
+        else if(novo->valor < lista->inicio->valor){
+            novo->prox = lista->inicio->prox;
+            lista->inicio = novo;
+        }
+        else{
+            aux=lista->inicio;
+            while(aux->prox && aux->prox->valor < novo->valor){
+                aux=aux->prox;
+            }
+            novo->prox=aux->prox;
+            aux->prox=novo;
+        }
+        lista->tam++;
+    }
+    else{
+        printf("Falha ao alocar memória para o novo no\n");
+    }
+}
+
+No *remove_from_list(Lista *lista, int num){
+    No *removed = NULL, *aux;
+    if(lista->inicio){
+        if(lista->inicio->valor == num){
+            removed = lista->inicio;
+            lista->inicio = lista->inicio->prox;
+        }
+        else{
+            aux = lista->inicio;
+            while(aux->prox && aux->prox->valor != num){
+                aux = aux->prox;
+            }
+            if(aux->prox){
+                removed = aux->prox;
+                aux->prox = removed->prox;
+            }
+            else{
+                printf("\nElemento com valor %d nao foi encontrado\n", num);
+            }
+        }
+    }
+    else{
+        printf("\nLista vazia\n");
+    }
+    return removed;
+}
+
+void print_lista(Lista lista){
+    No *aux = lista.inicio;
+    printf("\n-----Lista Tam:%d-----\n",lista.tam);
+    while(aux){
+        printf("%d\t",aux->valor);
+        aux=aux->prox;
+    }
+    printf("\n----------------------\n\n");
+
+}
+
+int main(void){
+    No *removido;
+    Lista lista;
+    init_list(&lista);
+    int opcao, num, ant;
+
+    do{
+        printf("\n0 - sair\n1 - inserir no inicio\n2 - inserir no meio\n3 - inserir no fim\n4 - inserir ordenado\n5 - remover valor\n6 - Imprimir Lista\n");
+        scanf("%d",&opcao);
+        switch(opcao){
+            case 1:
+                printf("Digite o valor a inserir na lista:\t");
+                scanf("%d",&num);
+                insert_inicio(&lista,num);
+                break;
+            case 2:
+                printf("Digite o valor a inserir na lista e o valor de referencia(anterior):\t");
+                scanf("%d%d",&num, &ant);
+                insert_meio(&lista,num,ant);
+                break;
+            case 3:
+                printf("Digite o valor a inserir na lista:\t");
+                scanf("%d",&num);
+                insert_fim(&lista,num);
+                break;
+            case 4:
+                printf("Digite o valor a inserir na lista:\t");
+                scanf("%d",&num);
+                insert_ord(&lista,num);
+                break;
+            case 5:
+                printf("Digite o valor a remover da lista:\t");
+                scanf("%d",&num);
+                removido = remove_from_list(&lista,num);
+                if(removido){
+                    printf("\nElemento de valor %d removido\n",removido->valor);
+                    free(removido);
+                }
+                else{
+                    printf("\nNao foi possivel remover um elemento com valor %d\n",num);
+                }
+                break;
+            case 6:
+                print_lista(lista);
+                break;
+            default:
+                if(opcao!=0){
+                    printf("Opcao invalida!\n");
+                }
+                break;     
+        }
+    }while(opcao!=0);
+}
