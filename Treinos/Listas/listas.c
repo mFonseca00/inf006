@@ -228,6 +228,7 @@ No *remove_from_list(Lista *lista, int num){
         if(lista->inicio->valor == num){
             removed = lista->inicio;
             lista->inicio = lista->inicio->prox;
+            lista->tam--;
         }
         else{
             aux = lista->inicio;
@@ -237,6 +238,7 @@ No *remove_from_list(Lista *lista, int num){
             if(aux->prox){
                 removed = aux->prox;
                 aux->prox = removed->prox;
+                lista->tam--;
             }
             else{
                 printf("\nElemento com valor %d nao foi encontrado\n", num);
@@ -249,9 +251,9 @@ No *remove_from_list(Lista *lista, int num){
     return removed;
 }
 
-No *search_from_list(Lista lista, int num){
+No *search_from_list(Lista *lista, int num){
     No *aux,*buscado=NULL;
-    aux = lista.inicio;
+    aux = lista->inicio;
     while(aux && aux->valor != num){
         aux = aux->prox;
     }
@@ -262,9 +264,9 @@ No *search_from_list(Lista lista, int num){
     return buscado;
 }
 
-void print_lista(Lista lista){
-    No *aux = lista.inicio;
-    printf("\n-----Lista Tam:%d-----\n",lista.tam);
+void print_lista(Lista *lista){
+    No *aux = lista->inicio;
+    printf("\n-----Lista Tam:%d-----\n",lista->tam);
     while(aux){
         printf("%d\t",aux->valor);
         aux=aux->prox;
@@ -316,12 +318,12 @@ int main(void){
                 }
                 break;
             case 6:
-                print_lista(lista);
+                print_lista(&lista);
                 break;
             case 7:
                 printf("Digite o valor a buscar na lista:\t");
                 scanf("%d",&num);
-                busca = search_from_list(lista,num);
+                busca = search_from_list(&lista,num);
                 if(busca){
                     printf("Valor %d encontrado\n",busca->valor);
                 }
