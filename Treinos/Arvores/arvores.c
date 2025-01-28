@@ -7,7 +7,7 @@ typedef struct no{
   struct no *esq;
 }NoArv;
 
-NoArv *insertArv_V1(NoArv *raiz, int num){
+NoArv *insertArv_V1(NoArv *raiz, int num){ //Recursiva com retorno
   NoArv *novo = malloc(sizeof(NoArv));
   if(novo){
     novo->valor = num;
@@ -30,6 +30,41 @@ NoArv *insertArv_V1(NoArv *raiz, int num){
   else{
     printf("Erro ao alocar memoria\n");
   }
+}
+
+void insertArv_V2(NoArv **raiz, int num){ //Recursiva sem retorno (ponteiro para ponteiro)
+  if(*raiz==NULL){
+    *raiz = malloc(sizeof(NoArv));
+    (*raiz)->valor=num;
+    (*raiz)->esq=NULL;
+    (*raiz)->dir=NULL;
+  }
+  else{
+    if(num<=(*raiz)->valor){
+      insertArv_V2(&((*raiz)->esq),num);
+    }
+    else{
+      insertArv_V2(&((*raiz)->dir),num);
+    }
+  }
+}
+
+void insertArv_V3(NoArv **raiz, int num){ //Não recursiva e sem retorno
+  NoArv *aux = *raiz;
+  while(aux){
+    if(num<=aux->valor){
+      raiz = &aux->esq;
+    }
+    else{
+      raiz = &aux->dir;
+    }
+    aux = *raiz;
+  }
+  aux = malloc(sizeof(NoArv));
+  aux->valor=num;
+  aux->dir=NULL;
+  aux->esq=NULL;
+  *raiz = aux;
 }
 
 void printArv_preOrden(NoArv *raiz){
@@ -62,22 +97,23 @@ int main(void){
   int opcao,num;
 
   do{
-    printf("\n\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir preOrden\n\t3 - imprimir orden\n\t4 - imprimir posOrden\n");
+    printf("\n\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n");
     scanf("%d",&opcao);
     printf("\n");
     switch(opcao){
       case 1:
         printf("\nInforme um numero para inserir:\t");
         scanf("%d",&num);
-        raiz = insertArv_V1(raiz,num);
+        // raiz = insertArv_V1(raiz,num);
+        // insertArv_V2(&raiz,num);
+        insertArv_V3(&raiz,num);
         break;
       case 2:
+        printf("Impressão preOrden:\n");
         printArv_preOrden(raiz);
-        break;
-      case 3:
+        printf("\nImpressão orden:\n");
         printArv_orden(raiz);
-        break;
-      case 4:
+        printf("\nImpressão posOrden:\n");
         printArv_posOrden(raiz);
         break;
       default:
