@@ -49,7 +49,7 @@ void insertArv_V2(NoArv **raiz, int num){ //Recursiva sem retorno (ponteiro para
   }
 }
 
-void insertArv_V3(NoArv **raiz, int num){ //Não recursiva e sem retorno
+void insertArv_V3(NoArv **raiz, int num){ //Não recursiva e sem retorno (iterativa)
   NoArv *aux = *raiz;
   while(aux){
     if(num<=aux->valor){
@@ -65,6 +65,36 @@ void insertArv_V3(NoArv **raiz, int num){ //Não recursiva e sem retorno
   aux->dir=NULL;
   aux->esq=NULL;
   *raiz = aux;
+}
+
+NoArv *buscaArv_recursiva(NoArv *raiz, int num){
+  if(raiz){
+    if(num == raiz->valor){
+      return raiz;
+    }
+    else if(num<raiz->valor){
+      return buscaArv_recursiva(raiz->esq,num);
+    }
+    else{
+      return buscaArv_recursiva(raiz->dir,num);
+    }
+  } 
+  return NULL; 
+}
+
+NoArv *buscarArv_iterativa(NoArv *raiz, int num){
+  while(raiz){
+    if(num==raiz->valor){
+      return raiz;
+    }
+    else if(num<raiz->valor){
+      raiz = raiz->esq;
+    }
+    else{
+      raiz = raiz->dir;
+    }
+  }
+  return NULL;
 }
 
 void printArv_preOrden(NoArv *raiz){
@@ -93,11 +123,11 @@ void printArv_posOrden(NoArv *raiz){
 
 int main(void){
 
-  NoArv *raiz = NULL;
+  NoArv *busca, *raiz = NULL;
   int opcao,num;
 
   do{
-    printf("\n\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n");
+    printf("\n\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - Buscar valor\n\n");
     scanf("%d",&opcao);
     printf("\n");
     switch(opcao){
@@ -109,12 +139,24 @@ int main(void){
         insertArv_V3(&raiz,num);
         break;
       case 2:
-        printf("Impressão preOrden:\n");
+        printf("\n\tImpressão preOrden:\n");
         printArv_preOrden(raiz);
-        printf("\nImpressão orden:\n");
+        printf("\n\tImpressão orden:\n");
         printArv_orden(raiz);
-        printf("\nImpressão posOrden:\n");
+        printf("\n\tImpressão posOrden:\n");
         printArv_posOrden(raiz);
+        break;
+      case 3:
+        printf("\nInforme um numero para buscar:\t");
+        scanf("%d",&num);
+        // busca = buscaArv_recursiva(raiz,num);
+        busca = buscarArv_iterativa(raiz,num);
+        if(busca){
+          printf("\n\tValor %d Encontrado",busca->valor);
+        }
+        else{
+          printf("\n\tValor não encontrado");
+        }        
         break;
       default:
         if(opcao!=0){
