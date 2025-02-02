@@ -97,6 +97,43 @@ NoArv *buscarArv_iterativa(NoArv *raiz, int num){
   return NULL;
 }
 
+int alturaArv_recursiva(NoArv *raiz){
+  if(raiz == NULL){
+    return -1;
+  }
+  else{
+    int esq = alturaArv_recursiva(raiz->esq);
+    int dir = alturaArv_recursiva(raiz->dir);
+    if(esq>dir){
+      return esq+1;
+    }
+    else{
+      return dir+1;
+    }
+  }
+}
+
+int qtdNosArv_recursiva(NoArv *raiz){
+  if(raiz==NULL){
+    return 0;
+  }
+  else{
+    return 1 + qtdNosArv_recursiva(raiz->dir) + qtdNosArv_recursiva(raiz->esq);
+  }
+}
+
+int qtdFolhasArv_recursiva(NoArv *raiz){ //Apenas extremidades da árvore
+  if(raiz==NULL){
+    return 0;
+  }
+  else if(raiz->esq==NULL && raiz->dir==NULL){
+    return 1;
+  }
+  else{
+    return qtdFolhasArv_recursiva(raiz->esq) + qtdFolhasArv_recursiva(raiz->dir);
+  }
+}
+
 void printArv_preOrden(NoArv *raiz){
   if(raiz){
     printf("%d\t",raiz->valor);
@@ -127,7 +164,7 @@ int main(void){
   int opcao,num;
 
   do{
-    printf("\n\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - Buscar valor\n\n");
+    printf("\n\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - Buscar valor\n\t4 - Altura\n\t5 - Qtd Nos\n\n");
     scanf("%d",&opcao);
     printf("\n");
     switch(opcao){
@@ -157,6 +194,12 @@ int main(void){
         else{
           printf("\n\tValor não encontrado");
         }        
+        break;
+      case 4:
+        printf("\n\tAltura da arvore: %d",alturaArv_recursiva(raiz));
+        break;
+      case 5:
+        printf("\n\tQuantidade de Nos na Arvore: %d",qtdNosArv_recursiva(raiz));
         break;
       default:
         if(opcao!=0){
