@@ -164,7 +164,7 @@ int main(void){
   int opcao,num;
 
   do{
-    printf("\n\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - Buscar valor\n\t4 - Altura\n\t5 - Qtd Nos\n\n");
+    printf("\n\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - Buscar valor\n\t4 - Altura\n\t5 - Qtd Nos\n\t6 - Folhas\n\n");
     scanf("%d",&opcao);
     printf("\n");
     switch(opcao){
@@ -200,6 +200,9 @@ int main(void){
         break;
       case 5:
         printf("\n\tQuantidade de Nos na Arvore: %d",qtdNosArv_recursiva(raiz));
+        break;
+      case 6:
+        printf("\n\tQuantidade de Folhas na Arvore: %d",qtdFolhasArv_recursiva(raiz));
         break;
       default:
         if(opcao!=0){
