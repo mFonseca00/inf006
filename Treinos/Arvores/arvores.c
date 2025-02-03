@@ -97,6 +97,33 @@ NoArv *buscarArv_iterativa(NoArv *raiz, int num){
   return NULL;
 }
 
+NoArv *removeNoArv(NoArv *raiz, int chave){
+  if(raiz==NULL){
+    printf("Valor nao encontrado!\n");
+    return NULL;
+  }
+  else{
+    if(raiz->valor == chave){
+      if(raiz->esq == NULL && raiz->dir==NULL){// Remoção de nós sem filhos
+        free(raiz);
+        return NULL;
+      }
+      else{// Remoção de nós com filhos
+
+      }
+    }
+    else{
+      if(raiz->valor > chave){
+        raiz->esq = removeNoArv(raiz->esq,chave);
+      }
+      else{
+        raiz->dir = removeNoArv(raiz->dir,chave);
+      }
+      return raiz;
+    }
+  }
+}
+
 int alturaArv_recursiva(NoArv *raiz){
   if(raiz == NULL){
     return -1;
@@ -164,7 +191,7 @@ int main(void){
   int opcao,num;
 
   do{
-    printf("\n\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - Buscar valor\n\t4 - Altura\n\t5 - Qtd Nos\n\t6 - Folhas\n\n");
+    printf("\n\n\t0 - sair\n\t1 - inserir\n\t2 - imprimir\n\t3 - Buscar valor\n\t4 - Altura\n\t5 - Qtd Nos\n\t6 - Folhas\n\t7 - Remover No\n\n");
     scanf("%d",&opcao);
     printf("\n");
     switch(opcao){
@@ -203,6 +230,11 @@ int main(void){
         break;
       case 6:
         printf("\n\tQuantidade de Folhas na Arvore: %d",qtdFolhasArv_recursiva(raiz));
+        break;
+      case 7:
+        printf("\nInforme um numero para remover:\t");
+        scanf("%d",&num);
+        raiz removeNoArv(raiz,num);
         break;
       default:
         if(opcao!=0){
