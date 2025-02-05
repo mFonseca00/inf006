@@ -109,7 +109,27 @@ NoArv *removeNoArv(NoArv *raiz, int chave){
         return NULL;
       }
       else{// Remoção de nós com filhos
-
+        if(raiz->esq !=NULL && raiz->dir !=NULL){ // dois flhos
+          No *aux = raiz->esq;
+          while(aux->dir !=NULL){
+            aux = aix->dir;
+          }
+          raiz->conteudo = aux->conteudo;
+          aux->condeudo = chave;
+          raiz->esq = removeNoArv(raiz->esq, chave);
+          return raiz;
+        }
+        else{ // um filho
+          No *aux;
+          if(raiz->esq){
+            aux=raiz->esq;
+          }
+          else{
+            aux=raiz->dir;
+          }
+          free(raiz);
+          return aux;
+        }
       }
     }
     else{
