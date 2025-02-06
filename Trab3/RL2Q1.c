@@ -104,10 +104,17 @@ int main (void){
     int valor, altura;
     char *token;
     Arvore *arv;
+    int contLinha=0;
 
     while(fgets(line, sizeof(line), fp_in) != NULL){
         // Usar strtok para dividir a linha em tokens (números)
         token = strtok(line, " \n"); // Delimitadores: espaço e nova linha
+        
+        // Pula linha, caso não seja a primeira
+        if(contLinha>0){
+            fprintf(fp_out,"\n");
+        }
+        contLinha++;
 
         // Criar árvore
         arv = criar_arv_vazia();
@@ -143,8 +150,6 @@ int main (void){
             printf("NaN\n"); // DEBUG
         }
 
-        // printf("\n"); // DEBUG
-        fprintf(fp_out,"\n"); // DEBUG
 
         // Excluir árvore
         liberar_arvore(arv->raiz);
