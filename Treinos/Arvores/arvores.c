@@ -110,17 +110,17 @@ NoArv *removeNoArv(NoArv *raiz, int chave){
       }
       else{// Remoção de nós com filhos
         if(raiz->esq !=NULL && raiz->dir !=NULL){ // dois flhos
-          No *aux = raiz->esq;
+          NoArv *aux = raiz->esq;
           while(aux->dir !=NULL){
-            aux = aix->dir;
+            aux = aux->dir;
           }
-          raiz->conteudo = aux->conteudo;
-          aux->condeudo = chave;
+          raiz->valor = aux->valor;
+          aux->valor = chave;
           raiz->esq = removeNoArv(raiz->esq, chave);
           return raiz;
         }
         else{ // um filho
-          No *aux;
+          NoArv *aux;
           if(raiz->esq){
             aux=raiz->esq;
           }
@@ -254,7 +254,7 @@ int main(void){
       case 7:
         printf("\nInforme um numero para remover:\t");
         scanf("%d",&num);
-        raiz removeNoArv(raiz,num);
+        raiz = removeNoArv(raiz,num);
         break;
       default:
         if(opcao!=0){
