@@ -135,12 +135,18 @@ int main (void){
         printf("max %d alt %d\n", max->valor, max->altura); // DEBUG
 
         if(max->pai!=NULL){
-            fprintf(fp_out,"pred %d\n", max->pai->valor);
+            fprintf(fp_out,"pred %d", max->pai->valor);
             printf("pred %d\n", max->pai->valor); // DEBUG
         }
         else{
-            fprintf(fp_out,"NAN\n");
+            fprintf(fp_out,"NAN");
             printf("NAN\n"); // DEBUG
+        }
+
+        // Adiciona a nova linha se não for a última linha
+        if (fgets(line, sizeof(line), fp_in) != NULL) {
+            fprintf(fp_out, "\n");
+            fseek(fp_in, -strlen(line), SEEK_CUR); // Volta para a posição correta
         }
 
         // printf("\n"); // DEBUG
