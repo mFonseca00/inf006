@@ -42,7 +42,7 @@ Arvore *criar_arv_vazia(){
     return nova;
 }
 
-void inserir_arv(Arvore *arvore, No *novo){
+int inserir_arv(Arvore *arvore, No *novo){
     if(arvore->raiz==NULL){
         arvore->raiz=novo;
     }
@@ -69,21 +69,23 @@ void inserir_arv(Arvore *arvore, No *novo){
         novo->pai = pai;
         novo->altura = alt;
     }
+
+    return novo->altura;
 }
 
 int main (void){
     // Ponteiros para os arquivos de entrada e saída
     FILE *fp_in = fopen("L2Q1.in", "r"); // Abre o arquivo de leitura ("r")
-    // FILE *fp_out = fopen("L1Q1.out", "w"); // Abre o arquivo de escrita ("w")
+    FILE *fp_out = fopen("L1Q1.out", "w"); // Abre o arquivo de escrita ("w")
 
-    if (fp_in == NULL ) // Tratamento de erro || fp_out == NULL
+    if (fp_in == NULL || fp_out == NULL) // Tratamento de erro 
     {
         printf("File cannot be oppened");
         return EXIT_FAILURE;
     }
 
     char line[MaxCaractersLinha];
-    int valor;
+    int valor, altura;
     char *token;
     Arvore *arv;
 
@@ -95,25 +97,30 @@ int main (void){
         arv = criar_arv_vazia();
 
         while (token != NULL) {
+            altura = -1;
             if (sscanf(token, "%d", &valor) == 1) {
                 printf("%d\t", valor); // DEBUG
 
-                // Inserção dos valores na árvore (a ser implementada)
-                inserir_arv(arv,criar_no(valor));
+                // Inserção dos valores na árvore
+                altura = inserir_arv(arv,criar_no(valor));
+
+                // Impressão da altura do nó inserido
+                fprintf(fp_out,"%d ",altura);
 
             }
             token = strtok(NULL, " \n"); // Obter o próximo token
         }
         printf("\n"); // DEBUG
+        fprintf(fp_out,"\n",altura); // DEBUG
+
+        // Identificação do nó máximo
         
-        // Impressão dos dados no arquivo imprimindo \n no começo da linha
-        
-        // Remoção do ultimo espaço
+        // Impressão dos dados do valor máximo no arquivo, imprimindo \n no final de todas, menos a ultima linha
 
         // Excluir árvore
 
     }
     fclose(fp_in);
-    // fclose(fp_out);
+    fclose(fp_out);
     return EXIT_SUCCESS;
 }
