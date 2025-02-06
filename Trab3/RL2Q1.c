@@ -139,8 +139,8 @@ int main (void){
             printf("pred %d\n", max->pai->valor); // DEBUG
         }
         else{
-            fprintf(fp_out,"NAN");
-            printf("NAN\n"); // DEBUG
+            fprintf(fp_out,"NaN");
+            printf("NaN\n"); // DEBUG
         }
 
         // printf("\n"); // DEBUG
