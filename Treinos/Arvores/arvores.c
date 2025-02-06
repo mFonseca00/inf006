@@ -122,7 +122,7 @@ int qtdNosArv_recursiva(NoArv *raiz){
   }
 }
 
-int qtdFolhasArv_recursiva(NoArv *raiz){ //Apenas extremidades da árvore
+int qtdFolhasArv_recursiva(NoArv *raiz){ //Apenas extremidades da árvore (ultimo nível)
   if(raiz==NULL){
     return 0;
   }
