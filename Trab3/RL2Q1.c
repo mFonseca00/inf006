@@ -73,6 +73,22 @@ int inserir_arv(Arvore *arvore, No *novo){
     return novo->altura;
 }
 
+No *maximo_arv(No *no){ // Busca o nó de maior valor naquela árvore ou sub-árvore
+    No *aux = no;
+    while(aux->dir != NULL){
+        aux = aux->dir;
+    }
+    return aux;
+}
+
+void liberar_arvore(No *raiz) {
+    if (raiz != NULL) {
+        liberar_arvore(raiz->esq); // Libera subárvore esquerda
+        liberar_arvore(raiz->dir); // Libera subárvore direita
+        free(raiz);                 // Libera o nó atual
+    }
+}
+
 int main (void){
     // Ponteiros para os arquivos de entrada e saída
     FILE *fp_in = fopen("L2Q1.in", "r"); // Abre o arquivo de leitura ("r")
@@ -99,10 +115,11 @@ int main (void){
         while (token != NULL) {
             altura = -1;
             if (sscanf(token, "%d", &valor) == 1) {
-                printf("%d\t", valor); // DEBUG
+                // printf("%d\t", valor); // DEBUG
 
                 // Inserção dos valores na árvore
                 altura = inserir_arv(arv,criar_no(valor));
+                printf("%d ", altura); // DEBUG
 
                 // Impressão da altura do nó inserido
                 fprintf(fp_out,"%d ",altura);
@@ -110,16 +127,30 @@ int main (void){
             }
             token = strtok(NULL, " \n"); // Obter o próximo token
         }
-        printf("\n"); // DEBUG
-        fprintf(fp_out,"\n",altura); // DEBUG
-
         // Identificação do nó máximo
+        No *max = maximo_arv(arv->raiz);
         
-        // Impressão dos dados do valor máximo no arquivo, imprimindo \n no final de todas, menos a ultima linha
+        // Impressão dos dados do valor máximo no arquivo
+        fprintf(fp_out,"max %d alt %d ", max->valor, max->altura);
+        printf("max %d alt %d\n", max->valor, max->altura); // DEBUG
+
+        if(max->pai!=NULL){
+            fprintf(fp_out,"pred %d\n", max->pai->valor);
+            printf("pred %d\n", max->pai->valor); // DEBUG
+        }
+        else{
+            fprintf(fp_out,"NAN\n");
+            printf("NAN\n"); // DEBUG
+        }
+
+        // printf("\n"); // DEBUG
+        // fprintf(fp_out,"\n",altura); // DEBUG
 
         // Excluir árvore
-
+        liberar_arvore(arv->raiz);
+        free(arv);
     }
+
     fclose(fp_in);
     fclose(fp_out);
     return EXIT_SUCCESS;
