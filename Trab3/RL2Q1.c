@@ -115,11 +115,11 @@ int main (void){
         while (token != NULL) {
             altura = -1;
             if (sscanf(token, "%d", &valor) == 1) {
-                printf("%d ", valor); // DEBUG
+                // printf("%d ", valor); // DEBUG
 
                 // Inserção dos valores na árvore
                 altura = inserir_arv(arv,criar_no(valor));
-                // printf("%d ", altura); // DEBUG
+                printf("%d ", altura); // DEBUG
 
                 // Impressão da altura do nó inserido
                 fprintf(fp_out,"%d ",altura);
@@ -132,7 +132,7 @@ int main (void){
         
         // Impressão dos dados do valor máximo no arquivo
         fprintf(fp_out,"max %d alt %d ", max->valor, max->altura);
-        printf("max %d alt %d", max->valor, max->altura); // DEBUG
+        printf("max %d alt %d ", max->valor, max->altura); // DEBUG
 
         if(max->pai!=NULL){
             fprintf(fp_out,"pred %d", max->pai->valor);
@@ -143,14 +143,8 @@ int main (void){
             printf("NAN\n"); // DEBUG
         }
 
-        // Adiciona a nova linha se não for a última linha
-        if (fgets(line, sizeof(line), fp_in) != NULL) {
-            fprintf(fp_out, "\n");
-            fseek(fp_in, -strlen(line), SEEK_CUR); // Volta para a posição correta
-        }
-
         // printf("\n"); // DEBUG
-        // fprintf(fp_out,"\n",altura); // DEBUG
+        fprintf(fp_out,"\n"); // DEBUG
 
         // Excluir árvore
         liberar_arvore(arv->raiz);
