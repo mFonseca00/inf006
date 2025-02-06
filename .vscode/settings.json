@@ -4,6 +4,7 @@
         "stdio.h": "c",
         "math.h": "c",
         "RL1Q2.c": "c",
-        "RL1Q2.C": "cpp"
+        "RL1Q2.C": "cpp",
+        "stdbool.h": "c"
     }
 }
