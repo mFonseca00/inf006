@@ -14,6 +14,10 @@ typedef struct no{
     struct no *pai;
 }No;
 
+typedef struct{
+    No *raiz;
+}Arvore;
+
 No *criar_no(int num){
     No *novo = malloc(sizeof(No));
     if(novo){
@@ -113,8 +117,8 @@ void liberar_arvore(No *raiz) {
 
 int main (void){
     // Ponteiros para os arquivos de entrada e saída
-    FILE *fp_in = fopen("L2Q1.in", "r"); // Abre o arquivo de leitura ("r")
-    FILE *fp_out = fopen("L1Q1.out", "w"); // Abre o arquivo de escrita ("w")
+    FILE *fp_in = fopen("L2Q2.in", "r"); // Abre o arquivo de leitura ("r")
+    FILE *fp_out = fopen("L1Q2.out", "w"); // Abre o arquivo de escrita ("w")
 
     if (fp_in == NULL || fp_out == NULL) // Tratamento de erro 
     {
@@ -154,18 +158,20 @@ int main (void){
             token = strtok(NULL, " \n"); // Obter o próximo token
         }
 
+        printf("\n"); // DEBUG
+
         // Calculo da diferença entre as subarvores
         calcular_soma_valores_arvore(arv->raiz);
 
         // impressão em string no formato ou direto no arquivo
-        imprimir_dados_arquivo(arv){
-
-        }
+        // imprimir_dados_arquivo(arv)
 
         // Excluir árvore
         liberar_arvore(arv->raiz);
         free(arv);
+
     }
+        
     fclose(fp_in);
     fclose(fp_out);
     return EXIT_SUCCESS;
