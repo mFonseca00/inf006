@@ -110,19 +110,18 @@ void calcular_soma_valores_arvore(No *raiz) { // Realiza a subtração dos valor
 
 void imprimir_dados_arquivo_arvore(No *raiz, FILE *fp_out){
     
-    //ele
+    // O próprio nó
     fprintf(fp_out,"%d (%d)",raiz->valor,raiz->soma);
-    //esq
+    // O nó a esquerda
     if(raiz->esq){
         fprintf(fp_out," ");
         imprimir_dados_arquivo_arvore(raiz->esq, fp_out);
     }
-    //dir
+    // O nó a direita
     if(raiz->dir){
         fprintf(fp_out," ");
         imprimir_dados_arquivo_arvore(raiz->dir, fp_out);
     }
-
 }
 
 void liberar_arvore(No *raiz) {
