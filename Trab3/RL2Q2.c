@@ -147,18 +147,18 @@ int main (void){
     int valor;
     char *token;
     Arvore *arv;
-    int contLinha=0;
+    bool primLinha=true;
 
     while(fgets(line, sizeof(line), fp_in) != NULL){
         // Usar strtok para dividir a linha em tokens (números)
         token = strtok(line, " \n"); // Delimitadores: espaço e nova linha
         
         // Pula linha, caso não seja a primeira
-        if(contLinha>0){
+        if(!primLinha){
             fprintf(fp_out,"\n");
             printf("\n"); // DEBUG
         }
-        contLinha++;
+        primLinha = false;
 
         // Criar árvore
         arv = criar_arv_vazia();
@@ -180,7 +180,7 @@ int main (void){
         // Calculo da diferença entre as subarvores
         calcular_soma_valores_arvore(arv->raiz);
 
-        // impressão em string no formato ou direto no arquivo
+        // impressão dos valores e os resultados no arquivo
         imprimir_dados_arquivo_arvore(arv->raiz, fp_out);
 
         // Excluir árvore
