@@ -108,8 +108,21 @@ void calcular_soma_valores_arvore(No *raiz) { // Realiza a subtração dos valor
     }
 }
 
-void imprimir_dados_arquivo(){
+void imprimir_dados_arquivo_arvore(No *raiz, FILE *fp_out){
     
+    //ele
+    fprintf(fp_out,"%d (%d)",raiz->valor,raiz->soma);
+    //esq
+    if(raiz->esq){
+        fprintf(fp_out," ");
+        imprimir_dados_arquivo_arvore(raiz->esq, fp_out);
+    }
+    //dir
+    if(raiz->dir){
+        fprintf(fp_out," ");
+        imprimir_dados_arquivo_arvore(raiz->dir, fp_out);
+    }
+
 }
 
 void liberar_arvore(No *raiz) {
@@ -125,7 +138,7 @@ int main (void){
     FILE *fp_in = fopen("L2Q2.in", "r"); // Abre o arquivo de leitura ("r")
     FILE *fp_out = fopen("L1Q2.out", "w"); // Abre o arquivo de escrita ("w")
 
-    if (fp_in == NULL || fp_out == NULL) // Tratamento de erro 
+    if (fp_in == NULL || fp_out == NULL) // Tratamento de erro  
     {
         printf("File cannot be oppened");
         return EXIT_FAILURE;
@@ -169,7 +182,7 @@ int main (void){
         calcular_soma_valores_arvore(arv->raiz);
 
         // impressão em string no formato ou direto no arquivo
-        imprimir_dados_arquivo(arv);
+        imprimir_dados_arquivo_arvore(arv->raiz, fp_out);
 
         // Excluir árvore
         liberar_arvore(arv->raiz);
