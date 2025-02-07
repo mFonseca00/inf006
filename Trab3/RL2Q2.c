@@ -97,15 +97,19 @@ int soma_subarvore(No *raiz) { // Realiza a soma dos valores de uma subarvore (e
 void calcular_soma_valores_arvore(No *raiz) { // Realiza a subtração dos valores da direita pela esquerda em cada nó da arvore
     if (raiz != NULL) {
         int somaEsq = soma_subarvore(raiz->esq);
-        printf("No: %d soma subarvore esquerda: %d\t",raiz->valor,somaEsq); // DEBUG
+        printf("No: %d\tsoma subarvore esquerda: %d\t",raiz->valor,somaEsq); // DEBUG
         int somaDir = soma_subarvore(raiz->dir);
-        printf("No: %d soma subarvore direita: %d\t",raiz->valor,somaDir); // DEBUG
+        printf("No: %d\tsoma subarvore direita: %d\t",raiz->valor,somaDir); // DEBUG
         raiz->soma = somaDir - somaEsq; // Realiza a subtração entre a subarvore atual direita e atual esquerda
-        printf("No: %d resultado entre subarvores: %d\n",raiz->valor,raiz->soma); // DEBUG
+        printf("No: %d\tresultado entre subarvores: %d\n",raiz->valor,raiz->soma); // DEBUG
 
         calcular_soma_valores_arvore(raiz->esq); // Calcula para a esquerda
         calcular_soma_valores_arvore(raiz->dir); // Calcula para a direita
     }
+}
+
+void imprimir_dados_arquivo(){
+    
 }
 
 void liberar_arvore(No *raiz) {
@@ -165,7 +169,7 @@ int main (void){
         calcular_soma_valores_arvore(arv->raiz);
 
         // impressão em string no formato ou direto no arquivo
-        // imprimir_dados_arquivo(arv)
+        imprimir_dados_arquivo(arv);
 
         // Excluir árvore
         liberar_arvore(arv->raiz);
