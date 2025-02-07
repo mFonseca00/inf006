@@ -47,15 +47,15 @@ Arvore *criar_arv_vazia(){
 }
 
 void inserir_arv(Arvore *arvore, No *novo){
-    if(arvore->raiz==NULL){
-        arvore->raiz=novo;
+    if(arvore->raiz == NULL){
+        arvore->raiz = novo;
     }
     else{
         No *walker = arvore->raiz;
-        No *pai;
-        int alt=0;
-        while(walker!=NULL && pai->valor != novo->valor){
-            pai=walker;
+        No *pai = NULL;  // Inicializa o ponteiro pai
+        int alt = 0;
+        while(walker != NULL){
+            pai = walker; // Atualiza pai para o nó atual
             if(novo->valor < walker->valor){
                 walker = walker->esq;
             }
@@ -64,6 +64,7 @@ void inserir_arv(Arvore *arvore, No *novo){
             }
             alt++;
         }
+        // Atualiza o ponteiro do nó pai para o novo nó
         if(novo->valor == pai->valor){
             pai->index++;
         }
@@ -98,9 +99,9 @@ void calcular_soma_valores_arvore(No *raiz) { // Realiza a subtração dos valor
         int somaEsq = soma_subarvore(raiz->esq);
         printf("No: %d soma subarvore esquerda: %d\t",raiz->valor,somaEsq); // DEBUG
         int somaDir = soma_subarvore(raiz->dir);
-        printf("No: %d soma subarvore esquerda: %d\t",raiz->valor,somaDir); // DEBUG
+        printf("No: %d soma subarvore direita: %d\t",raiz->valor,somaDir); // DEBUG
         raiz->soma = somaDir - somaEsq; // Realiza a subtração entre a subarvore atual direita e atual esquerda
-        printf("No: %d resultado entre subarvores: %d",raiz->valor,raiz->soma); // DEBUG
+        printf("No: %d resultado entre subarvores: %d\n",raiz->valor,raiz->soma); // DEBUG
 
         calcular_soma_valores_arvore(raiz->esq); // Calcula para a esquerda
         calcular_soma_valores_arvore(raiz->dir); // Calcula para a direita
