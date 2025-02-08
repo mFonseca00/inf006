@@ -92,7 +92,7 @@ void liberar_arvore(No *raiz) {
 int main (void){
     // Ponteiros para os arquivos de entrada e saída
     FILE *fp_in = fopen("L2Q1.in", "r"); // Abre o arquivo de leitura ("r")
-    FILE *fp_out = fopen("L1Q1.out", "w"); // Abre o arquivo de escrita ("w")
+    FILE *fp_out = fopen("L2Q1.out", "w"); // Abre o arquivo de escrita ("w")
 
     if (fp_in == NULL || fp_out == NULL) // Tratamento de erro 
     {

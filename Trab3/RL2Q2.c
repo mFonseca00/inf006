@@ -59,15 +59,16 @@ void inserir_arv(Arvore *arvore, No *novo){
             if(novo->valor < walker->valor){
                 walker = walker->esq;
             }
-            else{
+            else if (novo->valor > walker->valor) {
                 walker = walker->dir;
+            } else {
+                // Já existe um nó com este valor: incrementa o índice
+                walker->index++;
+                return; // Não insere um novo nó
             }
             alt++;
         }
         // Atualiza o ponteiro do nó pai para o novo nó
-        if(novo->valor == pai->valor){
-            pai->index++;
-        }
         if(novo->valor < pai->valor){
             pai->esq = novo;
         }
@@ -108,19 +109,20 @@ void calcular_soma_valores_arvore(No *raiz) { // Realiza a subtração dos valor
     }
 }
 
-void imprimir_dados_arquivo_arvore(No *raiz, FILE *fp_out){
-    
-    // O próprio nó
-    fprintf(fp_out,"%d (%d)",raiz->valor,raiz->soma);
+void imprimir_dados_arquivo_arvore(No *raiz, FILE *fp_out, bool primeiro){
     // O nó a esquerda
     if(raiz->esq){
-        fprintf(fp_out," ");
-        imprimir_dados_arquivo_arvore(raiz->esq, fp_out);
+        imprimir_dados_arquivo_arvore(raiz->esq, fp_out, primeiro);
+        primeiro = false;
     }
+    // O próprio nó
+    if(!primeiro){
+        fprintf(fp_out," ");
+    }
+    fprintf(fp_out,"%d (%d)",raiz->valor,raiz->soma);
     // O nó a direita
     if(raiz->dir){
-        fprintf(fp_out," ");
-        imprimir_dados_arquivo_arvore(raiz->dir, fp_out);
+        imprimir_dados_arquivo_arvore(raiz->dir, fp_out, false);
     }
 }
 
@@ -135,7 +137,7 @@ void liberar_arvore(No *raiz) {
 int main (void){
     // Ponteiros para os arquivos de entrada e saída
     FILE *fp_in = fopen("L2Q2.in", "r"); // Abre o arquivo de leitura ("r")
-    FILE *fp_out = fopen("L1Q2.out", "w"); // Abre o arquivo de escrita ("w")
+    FILE *fp_out = fopen("L2Q2.out", "w"); // Abre o arquivo de escrita ("w")
 
     if (fp_in == NULL || fp_out == NULL) // Tratamento de erro  
     {
@@ -181,7 +183,7 @@ int main (void){
         calcular_soma_valores_arvore(arv->raiz);
 
         // impressão dos valores e os resultados no arquivo
-        imprimir_dados_arquivo_arvore(arv->raiz, fp_out);
+        imprimir_dados_arquivo_arvore(arv->raiz, fp_out, true);
 
         // Excluir árvore
         liberar_arvore(arv->raiz);
