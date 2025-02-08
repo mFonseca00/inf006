@@ -80,7 +80,7 @@ int inserir_arv(Arvore *arvore, No *novo){
 No *buscar_arv(Arvore *arvore, int busca){
     No *aux = arvore->raiz;
     while(aux!=NULL && aux->valor != busca){
-        if(aux->valor < busca){
+        if(busca < aux->valor ){
             aux = aux->esq;
         }
         else{
@@ -90,79 +90,8 @@ No *buscar_arv(Arvore *arvore, int busca){
     return aux;
 }
 
-No *minimo_arv(No *no){ // Busca o nó de menor valor naquela árvore ou sub-árvore
-    No *aux = no;
-    while(aux->esq != NULL){
-        aux = aux->esq;
-    }
-    return aux;
-}
-
-No *sucessor_arv(No *no){ // Busca o nó imediatamente superior
-    if(no->dir!=NULL){
-        return minimo_arv(no->dir);
-    }
-    //else
-    No *aux = no;
-    while(aux != NULL && aux->dir !=no){
-        no = aux;
-        aux = aux->pai;
-    }
-    return aux;
-}
-
 No *remover_arv(Arvore *arvore, int num){
-    No *walker = buscar_arv(arvore, num); // Busca nó a ser removido
-    if (!walker) return NULL; // Valor não encontrado na árvore
     
-    No *pai = walker->pai;
-    
-    // Caso 1: Nó folha
-    if (!walker->esq && !walker->dir) {
-        if (!pai){
-            arvore->raiz = NULL;
-        }
-        else if (pai->esq == walker){
-            pai->esq = NULL;
-        }
-        else{
-            pai->dir = NULL;
-        } 
-    }
-    // Caso 2: Apenas um filho
-    else if (!walker->dir || !walker->esq) {
-        No *filho = walker->esq ? walker->esq : walker->dir;
-        filho->pai = pai;
-        if (!pai){
-            arvore->raiz = filho;
-            }
-        else if (pai->esq == walker){
-            pai->esq = filho;
-        }
-        else{
-            pai->dir = filho;
-        }
-    }
-    // Caso 3: Dois filhos
-    else {
-        No *sucessor = sucessor_arv(walker);
-        walker->valor = sucessor->valor;
-        
-        // Ajustando ponteiros do sucessor
-        if (sucessor->pai->esq == sucessor){
-            sucessor->pai->esq = sucessor->dir;
-        }
-        else {
-            sucessor->pai->dir = sucessor->dir;
-        }
-        
-        if (sucessor->dir){
-            sucessor->dir->pai = sucessor->pai;
-            }
-        
-        walker = sucessor; // Agora walker aponta para o nó que será removido
-    }
-    return walker;
 }
 
 void imprimir_dados_arquivo_arvore(No *raiz, FILE *fp_out, bool primeiro){
@@ -246,6 +175,7 @@ int main (void){
                 removido = remover_arv(arv,valor);
                 if(removido!=NULL){
                     printf("\tNo de valor %d removido.", removido->valor); // DEBUG
+                    free(removido);
                 }
                 else{
                     printf("\tImpossivel remover no inexistente."); // DEBUG
