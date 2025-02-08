@@ -90,8 +90,104 @@ No *buscar_arv(Arvore *arvore, int busca){
     return aux;
 }
 
-No *remover_arv(Arvore *arvore, int num){
-    
+No *maximo_arv(No *no){ // Busca o nó de maior valor naquela árvore ou sub-árvore
+    No *aux = no;
+    while(aux->dir != NULL){
+        aux = aux->dir;
+    }
+    return aux;
+}
+
+No *minimo_arv(No *no){
+    No *aux = no;
+    while(aux->esq != NULL){
+        aux = aux->esq;
+    }
+    return aux;
+}
+
+No *remover_folha(Arvore *arvore, No *no){
+    if (no->pai != NULL) {
+        if (no == no->pai->esq) {
+            no->pai->esq = NULL;
+        } else {
+            no->pai->dir = NULL;
+        }
+    } else {
+        // É a raiz
+        arvore->raiz = NULL;
+    }
+    return no; // retorna o nó removido
+}
+
+No *remover_com_um_filho(Arvore *arvore, No* no) {
+    No* filho = (no->esq != NULL) ? no->esq : no->dir;
+    if (no->pai != NULL) {
+        if (no == no->pai->esq) {
+            no->pai->esq = filho;
+        } else {
+            no->pai->dir = filho;
+        }
+    } else {
+        // É a raiz
+        arvore->raiz = filho;
+    }
+
+    if (filho != NULL) {
+        filho->pai = no->pai;
+    }
+    return no; // retorna o nó removido
+}
+
+No* encontrar_sucessor(No* no) {
+    no = no->dir;
+    while (no->esq != NULL) { // Busca o menor da direita
+        no = no->esq;
+    }
+    return no;
+}
+
+No *remover_com_dois_filhos(Arvore* arvore, No* no) {
+    // Usando o sucessor (menor da subárvore direita)
+    No *sucessor = encontrar_sucessor(no);
+
+    // Copiando as informações do sucessor
+    no->valor = sucessor->valor; 
+    no->altura = sucessor->altura;
+    no->index = sucessor->index;
+    no->soma = sucessor->soma;
+
+    // Remoção
+    return remover_com_um_filho(arvore, sucessor); // Remove o sucessor (que agora tem no máximo um filho)
+}
+
+No *remover_arv(Arvore *arvore, int valor) {
+    No* no_a_remover = buscar_arv(arvore, valor);
+    if (no_a_remover == NULL) {
+        return no_a_remover; // Valor não encontrado
+    }
+
+    if (no_a_remover->esq == NULL && no_a_remover->dir == NULL) {
+        return remover_folha(arvore, no_a_remover);
+    } else if (no_a_remover->esq == NULL || no_a_remover->dir == NULL) {
+        return remover_com_um_filho(arvore, no_a_remover);
+    } else {
+        return remover_com_dois_filhos(arvore, no_a_remover);
+    }
+}
+
+void atualizar_altura_no(No *no, int altura){
+    if(no){
+        no->altura = altura;
+        atualizar_altura_no(no->dir, altura+1);
+        atualizar_altura_no(no->esq, altura+1);
+    }
+}
+
+void atualizar_altura_arv(Arvore *arv, int alturaInicial){
+    if(arv && arv->raiz){
+        atualizar_altura_no(arv->raiz, 0);
+    }
 }
 
 void imprimir_dados_arquivo_arvore(No *raiz, FILE *fp_out, bool primeiro){
@@ -176,6 +272,7 @@ int main (void){
                 if(removido!=NULL){
                     printf("\tNo de valor %d removido.", removido->valor); // DEBUG
                     free(removido);
+                    atualizar_altura_arv(arv, 0); // Atualiza a altura de cada nó após a remoção
                 }
                 else{
                     printf("\tImpossivel remover no inexistente."); // DEBUG
