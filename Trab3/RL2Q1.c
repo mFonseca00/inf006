@@ -107,6 +107,8 @@ int main (void){
     int contLinha=0;
 
     while(fgets(line, sizeof(line), fp_in) != NULL){
+        line[strcspn(line, "\n")] = '\0'; // Remove o \n da linha lida
+        line[strcspn(line, "\r")] = '\0'; // Remove o \r da linha lida
         // Usar strtok para dividir a linha em tokens (números)
         token = strtok(line, " \n"); // Delimitadores: espaço e nova linha
         
