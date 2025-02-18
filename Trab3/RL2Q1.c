@@ -1,3 +1,5 @@
+// Integrantes da dupla: Marcus Vinicius Silva da Fonseca (20241160005) e Roberto Silva Barreto (20241160031)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -107,6 +109,8 @@ int main (void){
     int contLinha=0;
 
     while(fgets(line, sizeof(line), fp_in) != NULL){
+        line[strcspn(line, "\n")] = '\0'; // Remove o \n da linha lida
+        line[strcspn(line, "\r")] = '\0'; // Remove o \r da linha lida
         // Usar strtok para dividir a linha em tokens (números)
         token = strtok(line, " \n"); // Delimitadores: espaço e nova linha
         
