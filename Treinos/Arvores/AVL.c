@@ -110,3 +110,52 @@ Node *rotateLeftRight(Node *r){ // Rotação dupla direita
     r->left = rotateLeft(r->left);
     return rotateRight(r);
 }
+
+Node *balance(Node *root){
+    int fb = fatorBalanceamento(root);
+
+    // Rotação à esquerda
+    if(fb < -1 && fatorBalanceamento(root->right) <=0 ){
+        root = rotateLeft(root);
+    }
+    // Rotação à direita
+    else if(fb > 1 && fatorBalanceamento(root->left) >=0 ){
+        root = rotateRight(root);
+    }
+    // Rotação dupla à esquerda
+    else if(fb > 1 && fatorBalanceamento(root->left) < 0 ){
+        root = rotateLeftRight(root);
+    }
+    // Rotação dupla à direita
+    else if(fb < -1 && fatorBalanceamento(root->right) > 0){
+        root = rotateRightLeft(root);
+    }
+
+    return root;
+}
+
+Node *insertNode(Node *root, int num){
+    if(root==NULL){ // Insere na raiz
+        return novoNo(num);
+    }
+    else{ // Insere após a raiz
+        if(num < root->data){
+            root->left = insertNode(root->left);
+        }
+        else if(num > root->data){
+            root->right = insertNode(root->left);
+        }
+        else{
+            printf("\nInserção não realizada. Valor %d já existente.", num);
+        }
+    }
+
+    // Recalcula a altura
+    raiz->h = maior(alturaNo(root->left),alturaNo(root->right));
+
+    // Verifica se é necessário e rebalanceia a arvore
+    root = balance(root);
+
+    return root;
+}
+
