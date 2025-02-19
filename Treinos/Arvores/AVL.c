@@ -146,7 +146,7 @@ Node *insertNode(Node *root, int num){
             root->right = insertNode(root->left);
         }
         else{
-            printf("\nInserção não realizada. Valor %d já existente.", num);
+            printf("\nInserção não realizada. Valor %d ja existente.", num);
         }
     }
 
@@ -159,3 +159,61 @@ Node *insertNode(Node *root, int num){
     return root;
 }
 
+Node *remove(Node *root, int num){
+    if(root == NULL){
+        printf("\nImpossivel remover. Arvore vazia.");
+    }
+    else{
+        if(num == root->data){ // Nó sem filhos
+            if(root->left == NULL && root->right == NULL){
+                printf("\nElemento folha %d removido.", root->data);
+                free(root);
+                return NULL;
+            }
+            else{
+                if(root->left != NULL && root->right != NULL){ // Nó com dois filhos
+                    // Encontra o predecessor
+                    Node *aux = root->left;
+                    while(aux->right){
+                        aux = aux->right;
+                    }
+                    // Troca o nó com o predecessor
+                    root->data = aux->data
+                    aux->data = num;
+                    // Realiza a remoção (quando houver no máximo um filho)
+                    root->left = remove(root->left, num);
+                    return root;
+                }
+                else{ // Remoção de Nó com um filho
+                    Node *aux;
+                    if(root->left != NULL){ // Filho a esquerda
+                        aux->root->left;
+                    }
+                    else{ // Filho a direita
+                        aux->root->right;
+                    }
+                    printf("\nElemento folha %d removido.", root->data);
+                    free(root);
+                    return aux;
+                }
+            }
+        }
+        else{ // Caminha para encontrar valor
+            if(num < root->data){
+                root->left = remove(root->left, num);
+            }
+            else{
+                root->right = remove(root->right, num);
+            }
+        }
+
+        // Recalcula as alturas
+        root->h = maior(alturaNo(root->left),alturaNo(root->right));
+
+        // Verifica se é necessário e rebalanceia
+        root = balance(root);
+
+        return root;
+
+    }
+}
