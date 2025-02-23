@@ -66,6 +66,18 @@ void inorder_traversal(Node *root){
     }
 }
 
+int qtdLeafs(Node *root){
+    if(root == NULL){
+        return 0;
+    }
+    else if(root->left == NULL && root->right == NULL){
+        return 1;
+    }
+    else{
+        return qtdLeafs(root->left)+qtdLeafs(root->right);
+    }
+}
+
 int main(void){
     int i;
     int array[14]={34,84,15,0,2,99,79,9,88,89,18,31,39,100};
