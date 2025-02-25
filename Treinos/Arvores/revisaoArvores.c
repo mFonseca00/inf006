@@ -78,6 +78,26 @@ int qtdLeafs(Node *root){
     }
 }
 
+int maior(int a,int b){
+    return (a>b) ? a :b;
+}
+
+int altura(Node *root){
+    if(root == NULL){
+        return -1;
+    }
+    int Dir = altura(root->right);
+    int Esq = altura(root->left);
+    return maior(Dir,Esq)+1;
+}
+
+int fb(Node *root){
+    if(root){
+        return (altura(root->left)-altura(root->right));
+    }
+    return 0;
+}
+
 int main(void){
     int i;
     int array[14]={34,84,15,0,2,99,79,9,88,89,18,31,39,100};
