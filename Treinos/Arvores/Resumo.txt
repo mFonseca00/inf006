@@ -37,10 +37,7 @@ Node *insertNode(Node *root, int num){
 
 Node *search(Node *root, int num){
     Node *current = root;
-    printf("\nVisitng elements: ");
     while(current){
-        printf("%d ... ", current->data);
-
         if(num < current->data){
             current = current->left;
         }
