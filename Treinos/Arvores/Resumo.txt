@@ -1,0 +1,110 @@
+typedef struct node{
+    int data;
+    struct node *left;
+    struct node *right;
+}Node;
+
+Node *novoNo(int num){
+    Node *novo = malloc(sizeof(Node));
+    if(novo){
+        novo->data = num;
+        novo->left=NULL;
+        novo->right=NULL;
+    }
+    else{
+        printf("\tErro ao alocar memória para novo no.\n");
+    }
+    return novo;
+}
+
+Node *insertNode(Node *root, int num){
+    if(root==NULL){ // Insere na raiz
+        return novoNo(num);
+    }
+    else{ // Insere após a raiz
+        if(num < root->data){
+            root->left = insertNode(root->left, num);
+        }
+        else if(num > root->data){
+            root->right = insertNode(root->right, num);
+        }
+        else{
+            printf("\tInserção não realizada. Valor %d ja existente.\n", num);
+            return root; // Importante: retorna root inalterado
+        }
+    }
+}
+
+Node *search(Node *root, int num){
+    Node *current = root;
+    printf("\nVisitng elements: ");
+    while(current){
+        printf("%d ... ", current->data);
+
+        if(num < current->data){
+            current = current->left;
+        }
+        else if(num > current->data){
+            current = current->right;
+        }
+        else{
+            return current;
+        }
+    }
+}
+
+int qtdLeafs(Node *root){
+    if(root == NULL){
+        return 0;
+    }
+    else if(root->left == NULL && root->right == NULL){
+        return 1;
+    }
+    else{
+        return qtdLeafs(root->left)+qtdLeafs(root->right);
+    }
+}
+
+int maior(int a,int b){
+    return (a>b) ? a :b;
+}
+
+int altura(Node *root){
+    if(root == NULL){
+        return -1;
+    }
+    int Dir = altura(root->right);
+    int Esq = altura(root->left);
+    return maior(Dir,Esq)+1;
+}
+
+int fb(Node *root){
+    if(root){
+        return (altura(root->left)-altura(root->right));
+    }
+    return 0;
+}
+
+void printArv_preOrden(NoArv *raiz){
+  if(raiz){
+    printf("%d\t",raiz->valor);
+    printArv_preOrden(raiz->esq);
+    printArv_preOrden(raiz->dir);
+  }
+}
+
+void printArv_orden(NoArv *raiz){
+  if(raiz){
+    printArv_preOrden(raiz->esq);
+    printf("%d\t",raiz->valor);
+    printArv_preOrden(raiz->dir);
+  }
+}
+
+void printArv_posOrden(NoArv *raiz){
+  if(raiz){
+    printArv_preOrden(raiz->esq);
+    printArv_preOrden(raiz->dir);
+    printf("%d\t",raiz->valor);
+  }
+}
